@@ -54,17 +54,20 @@ class GuestController extends Controller
      */
     public function store(ContactFormRequest $request)
     {
+        //リクエストデータを配列化
+        $requests = $request->all();
+
         //登録処理
-        $guest = $this->contactService->store($request->all());
+        $guest = $this->contactService->store($requests);
         
         //メール送信処理
         $this->sendMailService->send($guest);
         
         //配信用メールアドレスの入力がある場合
-        if ($request['stream_email']) {
+        if ($requests['stream_email']) {
             
             //ブラストメールへの反映をAPI経由で実行
-            $this->blastmailService->reflect($request->all(), FALSE);
+            $this->blastmailService->reflect($requests, FALSE);
         }
         
         //新たにトークンを作成（多重送信防止）

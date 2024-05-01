@@ -56,7 +56,7 @@ class BlastmailService
      * 反映
      * 
      * @param array $requests
-     * @param string $accessToken
+     * @param bool $updateFlag
      * @return void
      */
     public function reflect(array $requests, bool $updateFlag = TRUE)
@@ -190,7 +190,7 @@ class BlastmailService
      * curl処理実行
      * 
      * @param string $url
-     * @param array $registData
+     * @param array $postDatas
      * @return void
      */
     public function executeCurl(string $url, array $postDatas)
