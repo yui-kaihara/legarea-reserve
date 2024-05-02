@@ -31,13 +31,13 @@
             </div>
         </dl>
     </div>
+    
+    @include('common.guests.form', ['route' => route('guests.store'), 'submitText' => '申込'])
 
 @else
 
     <p class="mt-20 mb-10 text-center">現在、開催予定の交流会はございません。<br />次回開催までしばらくお待ちください。</p>
 
 @endif
-
-    @include('common.guests.form', ['route' => route('guests.store'), 'submitText' => '申込'])
     
 </x-app-layout>
