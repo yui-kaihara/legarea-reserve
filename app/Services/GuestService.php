@@ -45,6 +45,11 @@ class GuestService
                 $join->where('companies.count', $condition, 1);
             });
         }
+        
+        //件数の指定が0の場合、全件を設定
+        if ($page === 0) {
+            $page = $query->count();
+        }
 
         //会社IDの昇順にソート、ページネーションを設定して取得
         $guests = $query->orderby('company_id')->paginate($page);

@@ -176,7 +176,7 @@ class GuestController extends Controller
 
         //ゲスト一覧
         $guests = $results[0]->all();
-        
+
         //追加ファイル名
         $addFileName = $results[2];
 
