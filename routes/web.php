@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Route;
 
 //ユーザ予約画面
 Route::get('/', [GuestController::class, 'create'])->name('guests.create');
-Route::resource('guests', GuestController::class)->only(['store']);
+Route::post('guests', [GuestController::class, 'store'])->name('guests.store');
+Route::get('complete', [GuestController::class, 'complete'])->name('guests.complete');
 
 //管理画面
 Route::middleware([

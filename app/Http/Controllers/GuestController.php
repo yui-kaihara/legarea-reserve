@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ContactFormRequest;
+use App\Models\Guest;
 use App\Services\BlastmailService;
 use App\Services\ContactService;
 use App\Services\EventService;
@@ -73,8 +74,18 @@ class GuestController extends Controller
         //新たにトークンを作成（多重送信防止）
         $request->session()->regenerateToken();
         
+        //予約完了画面に遷移
+       return redirect(route('guests.complete'))->with(['guest' => $guest]);
+    }
+    
+    /**
+     * 予約完了画面表示
+     * 
+     * @return Illuminate\View\View
+     */
+    public function complete()
+    {
         //ビューに渡す
-        return view('guests.complete', ['guest' => $guest]);
-        
+        return view('guests.complete');
     }
 }
