@@ -1,6 +1,7 @@
 <x-app-layout>
     <x-slot name="navigation"></x-slot>
-    <x-slot name="header">第{{ $nextTime }}回 予約者一覧{{ $statusText }}</x-slot>
+    <x-slot name="script">js/submit.js</x-slot>
+    <x-slot name="header">予約者一覧{{ $statusText }}</x-slot>
 
 @if (session('flash_message'))
     <p class="px-4 py-3 bg-{{ session('messageColor') }}-100 text-{{ session('messageColor') }}-600 text-center font-semibold">
@@ -11,11 +12,36 @@
 @if ($guests->total() > 0)
 
     <div class="w-11/12 lg:w-5/6 mx-auto py-10">
-        <form action="{{ route('admin.guests.download', ['status' => request()->input('status')]) }}" method="POST" class="mb-2 lg:mb-5 text-right">
+        <form action="{{ route('admin.guests.download', ['status' => request()->input('status')]) }}" method="POST" class="text-right">
             @csrf
             <button class="cursor-pointer py-2 px-9 lg:py-3 lg:px-14 text-sm font-semibold rounded-lg border border-transparent bg-blue-100 text-blue-800 hover:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none">ダウンロード</button>
         </form>
-        <p class="mb-2 pr-1 text-sm text-gray-600 text-right">合計 <span class="text-lg font-semibold">{{ $guests->total() }}</span> 名</p>
+        <div class="flex justify-between items-end mb-2">
+            <form action="javascript:void(0)">
+                @csrf
+                第
+                <select name="times" class="w-16 mt-2 px-4 border-gray-200 rounded-lg" id="is-change">
+
+@foreach ($times as $time)
+@php
+$url = Request::url();
+$status = request()->input('status');
+$url = $url.'?event='.$time;
+$url = ($status) ? $url.'&status='.$status : $url;
+
+$event = request()->input('event');
+$selected = '';
+if ($event == $time) {
+    $selected = ' selected="selected"';
+}
+@endphp
+                    <option value="{{ $url }}"{{ $selected }}>{{ $time }}</option>
+@endforeach
+                </select>
+                回
+            </form>
+            <p class="mb-2 pr-1 text-sm text-gray-600 text-right">合計 <span class="text-lg font-semibold">{{ $guests->total() }}</span> 名</p>
+        </div>
         <table class="block overflow-x-scroll md:overflow-x-auto text-center">
             <thead>
                 <tr class="bg-gray-200 text-xs font-medium text-gray-600">
@@ -47,6 +73,7 @@
                             <form action="{{ route('admin.guests.destroy', [$guest->id]) }}" method="post">
                                 @csrf
                                 @method('DELETE')
+                                <input type="hidden" name="times" value="{{ $guest->event[0]->times }}" />
                                 <input type="submit" value="削除" onclick="return confirm('本当にキャンセルしますか？')" class="bg-white hover:bg-gray-100 text-gray-500 font-semibold py-2 px-2 border border-gray-400 rounded shadow cursor-pointer" />
                             </form>
                         </div>

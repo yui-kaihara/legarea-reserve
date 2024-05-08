@@ -16,11 +16,19 @@
 
         <!-- Styles -->
         @livewireStyles
+
+<!--JS読み込み-->
+@if (isset($script))
+        <script src="{{ asset($script) }}"></script>
+@endif
+
     </head>
     <body class="font-sans antialiased">
         <x-banner />
 
         <div class="min-h-screen bg-gray-100">
+            
+<!--ナビゲーション-->
 @if (isset($navigation))
             @livewire('navigation-menu')
 @endif

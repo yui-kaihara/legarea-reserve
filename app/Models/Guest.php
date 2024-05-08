@@ -36,7 +36,7 @@ class Guest extends Model
      *
      * @array
      */
-    protected $fillable = ['company_name', 'name', 'name_kana', 'age', 'email', 'stream_email', 'event_id', 'company_id'];
+    protected $fillable = ['company_name', 'name', 'name_kana', 'age', 'email', 'stream_email', 'company_id'];
     
     /*
      * ゲストが所属する会社を取得
@@ -45,16 +45,16 @@ class Guest extends Model
      */
     public function company()
     {
-      return $this->belongsTo(Company::class);
+        return $this->belongsTo(Company::class);
     }
     
     /*
-     * ゲストが参加する交流会を取得
+     * 参加する交流会を取得
      *
      * @return App\Models\Event
      */
     public function event()
     {
-      return $this->belongsTo(Event::class, 'event_id', 'times');
+        return $this->belongsToMany(Event::class, 'event_guests', 'guest_id', 'event_id');
     }
 }

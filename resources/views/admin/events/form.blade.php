@@ -30,7 +30,7 @@ $capacity = old('capacity');
 
         <div>
             <label class="flex gap-2 text-sm font-medium"><span class="align-text-top px-1 py-0.5 bg-red-500 rounded-sm text-white text-xs">必須</span> 開催回</label>
-            第 <input type="number" name="times" value="{{ $times }}" class="w-24 mt-2 px-4 border-gray-200 rounded-lg" /> 回
+            第 <input type="number" name="times" value="{{ $times }}" class="w-20 mt-2 px-4 border-gray-200 rounded-lg" /> 回
 @error('times')
             <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
 @enderror

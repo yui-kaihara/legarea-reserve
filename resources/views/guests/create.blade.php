@@ -32,6 +32,10 @@
         </dl>
     </div>
     
+@section('selectTimes')
+    <input type="hidden" name="times" value="{{ $event->times }}" />
+@endsection
+    
     @include('common.guests.form', ['route' => route('guests.store'), 'submitText' => '申込'])
 
 @else

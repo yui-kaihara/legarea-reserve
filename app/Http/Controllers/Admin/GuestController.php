@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ContactFormRequest;
+use App\Models\Event;
 use App\Models\Guest;
 use App\Services\BlastmailService;
 use App\Services\CompanyService;
 use App\Services\ContactService;
 use App\Services\DownloadService;
+use App\Services\EventService;
 use App\Services\GuestService;
 use Illuminate\Http\Request;
 
@@ -22,6 +24,7 @@ class GuestController extends Controller
      * @param CompanyService $companyService
      * @param ContactService $contactService
      * @param DownloadService $downloadService
+     * @param EventService $eventService
      * @param GuestService $guestService
      */
     public function __construct(
@@ -29,6 +32,7 @@ class GuestController extends Controller
         CompanyService $companyService,
         ContactService $contactService,
         DownloadService $downloadService,
+        EventService $eventService,
         GuestService $guestService
     )
     {
@@ -36,6 +40,7 @@ class GuestController extends Controller
         $this->companyService = $companyService;
         $this->contactService = $contactService;
         $this->downloadService = $downloadService;
+        $this->eventService = $eventService;
         $this->guestService = $guestService;
     }
 
@@ -49,12 +54,20 @@ class GuestController extends Controller
     {
         //statusパラメータを取得
         $status = $request->input('status');
+        
+        //eventパラメータを取得
+        $event = $request->input('event');
+        $event = ($event) ?? Event::max('times');
 
         //ゲスト一覧を取得
-        $results = $this->guestService->getList($status);
+        $results = $this->guestService->getList((int)$event, $status);
+        
+        //交流会の開催回一覧を取得
+        $events = $this->eventService->getList();
+        $times = $events->pluck('times');
 
         //ビューに渡す
-        return view('admin.guests.index', ['guests' => $results[0], 'nextTime' => $results[1], 'statusText' => $results[2]]);
+        return view('admin.guests.index', ['guests' => $results[0], 'nextTime' => $event, 'statusText' => $results[1], 'times' => $times]);
     }
 
     /**
@@ -64,7 +77,12 @@ class GuestController extends Controller
      */
     public function create()
     {
-        return view('admin.guests.create');
+        //交流会の開催回一覧を取得
+        $events = $this->eventService->getList();
+        $times = $events->pluck('times');
+
+        //ビューに渡す
+        return view('admin.guests.create', ['times' => $times]);
     }
 
     /**
@@ -128,7 +146,7 @@ class GuestController extends Controller
         
         //該当のゲスト情報を取得
         $guest = Guest::find($id);
-        
+
         //会社更新処理
         $this->companyService->update(['company_name' => $requests['company_name']], $guest->company->id);
 
@@ -148,13 +166,14 @@ class GuestController extends Controller
     /**
      * 削除
      * 
+     * @param Request $request
      * @param int $id
      * @return Illuminate\View\View
      */
-    public function destroy(int $id)
+    public function destroy(Request $request, int $id)
     {
         //削除処理
-        $this->contactService->destroy($id);
+        $this->contactService->destroy((int)$request['times'], $id);
         
         //一覧画面にリダイレクト
         return redirect(route('admin.guests.index'))->with(['flash_message' => 'キャンセルが完了しました。', 'messageColor' => 'blue']);
@@ -178,7 +197,7 @@ class GuestController extends Controller
         $guests = $results[0]->all();
 
         //追加ファイル名
-        $addFileName = $results[2];
+        $addFileName = $results[1];
 
         //Excelダウンロード
         $this->downloadService->download($guests, $addFileName);

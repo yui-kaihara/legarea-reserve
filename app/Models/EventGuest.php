@@ -6,7 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Company extends Model
+class EventGuest extends Model
 {
     use HasFactory;
     
@@ -29,22 +29,32 @@ class Company extends Model
      *
      * @var string
      */
-    protected $table = 'companies';
+    protected $table = 'event_guests';
     
     /*
      * 保存するカラム
      *
      * @array
      */
-    protected $fillable = ['company_name', 'domain', 'count'];
+    protected $fillable = ['event_id', 'guest_id', 'company_id'];
+    
+    /*
+     * 交流会の取得
+     *
+     * @return App\Models\Event
+     */
+    public function event()
+    {
+      return $this->belongsTo(Event::class);
+    }
 
     /*
-     * 会社に所属するゲストの取得
+     * 参加するゲストの取得
      *
      * @return App\Models\Guest
      */
     public function guest()
     {
-      return $this->hasMany(Guest::class);
+      return $this->belongsTo(Guest::class);
     }
 }

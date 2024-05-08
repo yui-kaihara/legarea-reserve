@@ -28,7 +28,8 @@ class ContactFormRequest extends FormRequest
             'age' => 'required|integer',
             'email' => 'required|email',
             'email_stream' => 'nullable|email',
-            'company_name' => 'required'
+            'company_name' => 'required',
+            'times' => 'required|integer'
         ];
     }
     
@@ -59,7 +60,8 @@ class ContactFormRequest extends FormRequest
 	        'age' => '年齢',
 	        'email' => 'メールアドレス',
 	        'email_stream' => 'メールアドレス',
-	        'company_name' => '会社名'
+	        'company_name' => '会社名',
+	        'times' => '開催回'
         ];
     }
 }

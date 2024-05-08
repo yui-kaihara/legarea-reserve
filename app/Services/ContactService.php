@@ -5,18 +5,29 @@ namespace App\Services;
 
 use App\Models\Company;
 use App\Models\Event;
+use App\Models\EventGuest;
 use App\Models\Guest;
 use App\Services\CompanyService;
+use App\Services\EventGuestService;
 use App\Services\GuestService;
 
 class ContactService
 {
+    /**
+     * コンストラクタ
+     * 
+     * @param CompanyService $companyService
+     * @param EventGuestService $eventGuestService
+     * @param GuestService $guestService
+     */
     public function __construct(
         CompanyService $companyService,
+        EventGuestService $eventGuestService,
         GuestService $guestService
     )
     {
         $this->companyService = $companyService;
+        $this->eventGuestService = $eventGuestService;
         $this->guestService = $guestService;
     }
 
@@ -29,7 +40,7 @@ class ContactService
     public function store(array $requests)
     {
         //次の開催回を取得
-        $nextTime = Event::max('times');
+        $nextTime = $requests['times'];
         
         //メールアドレスからドメイン部分を取得
         $domain = substr(strrchr($requests['email'], '@'), 1);
@@ -37,16 +48,19 @@ class ContactService
         //会社テーブルへの登録用データ
         $companyRequests = [
             'company_name' => $requests['company_name'],
-            'domain' => $domain,
-            'event_id' => $nextTime
+            'domain' => $domain
         ];
         
         //ゲストテーブルへの登録用データ
         unset($requests['company_name']);
-        $requests['event_id'] = $nextTime;
-        
+
         //参加予定者（自分以外）
-        $eventGuests = Guest::where('event_id', $nextTime)->where('email', '!=', $requests['email']);
+        $guestIds = Guest::where('email', '!=', $requests['email'])->pluck('id');
+        $eventGuests = EventGuest::where('event_id', '=', $nextTime);
+
+        if ($guestIds->count() > 0) {
+            $eventGuests = $eventGuests->whereIn('guest_id', $guestIds);
+        }
 
         //全体の参加予定人数
         $guestCount = $eventGuests->count();
@@ -68,12 +82,18 @@ class ContactService
         }
         
         //会社テーブルに同じドメインのメールアドレスが存在するか確認
-        $existCompanyData = Company::where('domain', $domain)->first();
+        $existCompanyData = Company::where('domain', '=', $domain)->first();
+        
+        //会社IDを初期化
+        $companyId = 0;
 
         if ($existCompanyData) {
             
+            //会社IDを設定
+            $companyId = $existCompanyData->id;
+            
             //会社の参加予定人数
-            $companyGuestCount = $eventGuests->where('company_id', $existCompanyData->id)->count();
+            $companyGuestCount = $eventGuests->where('company_id', $companyId)->count();
             
             //1社2名の定員をオーバーしている場合は登録しない
             if ($companyGuestCount >= 2) {
@@ -84,27 +104,11 @@ class ContactService
                 //ゲストモデルを返却
                 return $guest;
             }
-            
-            //会社のイベントIDが次回のものと一致していない場合
-            if ($existCompanyData->event_id !== $nextTime) {
-                
-                //会社の更新データを設定
-                $updateDatas = [
-                    'count' => $existCompanyData->count + 1,
-                    'event_id' => $nextTime
-                ];
-                
-                //会社更新処理
-                $this->companyService->update($updateDatas, $existCompanyData->id);
-            }
-            
+
             //ゲストテーブルに同じメールアドレスが存在するか確認
             $existGuestData = Guest::where('email', $requests['email'])->first();
             
             if ($existGuestData) {
-                
-                //ゲストの更新データを追加
-                $requests['event_id'] = $nextTime;
                 
                 //ゲスト更新処理
                 $this->guestService->update($requests, $existGuestData->id);
@@ -113,7 +117,7 @@ class ContactService
             } else {
                 
                 //ゲストの登録データを追加
-                $requests['company_id'] = $existCompanyData->id;
+                $requests['company_id'] = $companyId;
                 
                 //ゲスト新規登録処理
                 $guest = $this->guestService->store($requests);
@@ -124,13 +128,33 @@ class ContactService
             //会社新規登録処理
             $company = $this->companyService->store($companyRequests);
             
+            //会社IDを設定
+            $companyId = $company->id;
+            
             //ゲストの登録データを追加
-            $requests['company_id'] = $company->id;
+            $requests['company_id'] = $companyId;
             
             //ゲスト新規登録処理
             $guest = $this->guestService->store($requests);
         }
         
+        //開催回ごとのゲストデータを設定
+        $eventGuestRequests = [
+            'event_id' => $nextTime,
+            'guest_id' => $guest->id,
+            'company_id' => $companyId
+        ];
+        
+        //開催回ごとのゲスト新規登録処理
+        $this->eventGuestService->store($eventGuestRequests);
+        
+        //会社の更新データを設定
+        $count = EventGuest::where('company_id', '=', $companyId)->pluck('event_id')->unique()->count();
+        $updateDatas = ['count' => $count];
+        
+        //会社更新処理
+        $this->companyService->update($updateDatas, $companyId);
+
         //登録結果を設定（完了）
         $guest->result = TRUE;
 
@@ -141,26 +165,24 @@ class ContactService
     /**
      * 削除
      * 
-     * @param int $id
+     * @param int $eventId
+     * @param int $guestId
      * @return void
      */
-    public function destroy(int $id)
+    public function destroy(int $eventId, int $guestId)
     {
-        //該当ゲスト情報を取得
-        $guest = Guest::find($id);
+        //開催回ごとのゲストデータを削除
+        $this->eventGuestService->destroy($eventId, $guestId);
         
-        //ゲスト削除処理
-        $this->guestService->destroy($id);
+        $guest = Guest::find($guestId);
         
-        //同じ会社で次回参加予定者がいるか
-        $nextTimeGuests = Guest::where([
-            'event_id' => $guest->event_id,
-            'company_id' => $guest->company_id
-        ])->first();
-
-        //いなければ会社としての参加をキャンセル
-        if (!$nextTimeGuests) {
-            $this->companyService->destroy($guest->company->id);
-        }
+        $companyId = $guest->company->id;
+        
+        //会社の更新データを設定
+        $count = EventGuest::where('company_id', '=', $companyId)->pluck('event_id')->unique()->count();
+        $updateDatas = ['count' => $count];
+        
+        //会社更新処理
+        $this->companyService->update($updateDatas, $companyId);
     }
 }
