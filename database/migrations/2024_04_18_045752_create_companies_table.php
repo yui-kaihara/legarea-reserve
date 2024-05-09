@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('company_name')->comment('会社名');
             $table->string('domain')->comment('ドメイン');
             $table->integer('count')->default(1)->comment('参加回数');
+            $table->integer('event_id')->comment('交流会ID');
             $table->timestamps();
         });
     }

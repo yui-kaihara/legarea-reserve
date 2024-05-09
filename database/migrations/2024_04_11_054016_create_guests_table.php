@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('age')->comment('年齢');
             $table->string('email')->comment('メールアドレス');
             $table->string('stream_email')->nullable()->comment('配信用メールアドレス');
+            $table->integer('event_id')->comment('交流会ID');
             $table->integer('company_id')->comment('会社ID');
             $table->timestamps();
         });
