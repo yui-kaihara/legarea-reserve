@@ -52,7 +52,7 @@ class DownloadService
         }
         
         //ファイル名を設定
-        $fileName = '第'.$guests[0]->event->times.'回交流会予約者一覧'.$addFileName.'.xlsx';
+        $fileName = '第'.$guests[0]->event[0]->times.'回交流会予約者一覧'.$addFileName.'.xlsx';
 
         //Excelファイルをダウンロード
         $writer = new Xlsx($spreadsheet);

@@ -187,11 +187,12 @@ class GuestController extends Controller
      */
     public function download(Request $request)
     {
-        //ステータスパラメータを取得
+        //パラメータを取得
+        $event = ($request->input('event')) ?? Event::max('times');
         $status = $request->input('status');
 
         //ゲスト一覧関連のデータを取得
-        $results = $this->guestService->getList($status, 0);
+        $results = $this->guestService->getList((int)$event, $status, 0);
 
         //ゲスト一覧
         $guests = $results[0]->all();

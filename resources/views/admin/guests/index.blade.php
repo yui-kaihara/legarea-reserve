@@ -12,7 +12,7 @@
 @if ($guests->total() > 0)
 
     <div class="w-11/12 lg:w-5/6 mx-auto py-10">
-        <form action="{{ route('admin.guests.download', ['status' => request()->input('status')]) }}" method="POST" class="text-right">
+        <form action="{{ route('admin.guests.download', ['event' => request()->input('event'), 'status' => request()->input('status')]) }}" method="POST" class="text-right">
             @csrf
             <button class="cursor-pointer py-2 px-9 lg:py-3 lg:px-14 text-sm font-semibold rounded-lg border border-transparent bg-blue-100 text-blue-800 hover:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none">ダウンロード</button>
         </form>

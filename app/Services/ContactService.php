@@ -8,6 +8,7 @@ use App\Models\Event;
 use App\Models\EventGuest;
 use App\Models\Guest;
 use App\Services\CompanyService;
+use App\Services\EventService;
 use App\Services\EventGuestService;
 use App\Services\GuestService;
 
@@ -17,16 +18,19 @@ class ContactService
      * コンストラクタ
      * 
      * @param CompanyService $companyService
+     * @param EventService $eventService
      * @param EventGuestService $eventGuestService
      * @param GuestService $guestService
      */
     public function __construct(
         CompanyService $companyService,
+        EventService $eventService,
         EventGuestService $eventGuestService,
         GuestService $guestService
     )
     {
         $this->companyService = $companyService;
+        $this->eventService = $eventService;
         $this->eventGuestService = $eventGuestService;
         $this->guestService = $guestService;
     }
@@ -40,17 +44,18 @@ class ContactService
     public function store(array $requests)
     {
         //開催回を取得
-        $times = $requests['times'];
+        $times = (int)$requests['times'];
 
         //全体の参加予定人数を取得
-        $guestCount = $this->guestCount($requests, $times);
+        $existGuest = Guest::where('email', '=', $requests['email'])->first(); //申込者のデータを取得
+        $guestCount = $this->guestCount($times, $existGuest);
         
         //交流会の定員を取得
         $capacity = $this->eventService->getDetail($times)->capacity;
         
         //返却するゲストモデルを初期化
         $guest = new Guest($requests);
-        
+
         //定員をオーバーしている場合は登録しない
         if ($guestCount >= $capacity) {
             
@@ -83,13 +88,13 @@ class ContactService
             $companyId = $existCompanyData->id;
             
             //会社の参加予定人数
-            $companyGuestCount = $eventGuests->where('company_id', $companyId)->count();
+            $companyGuestCount = $this->guestCount($times, $existGuest, $companyId);
             
             //1社2名の定員をオーバーしている場合は登録しない
             if ($companyGuestCount >= 2) {
-                
+
                 //ゲストモデルを返却
-                $guest->result = FALSE; //登録結果（不可）
+                $guest->result = FALSE;
                 return $guest;
             }
 
@@ -98,6 +103,7 @@ class ContactService
                 
                 //ゲスト更新処理
                 $this->guestService->update($requests, $existGuest->id);
+                $guest->id = $existGuest->id;
                 $guest->company_id = $existGuest->company_id;
 
             } else {
@@ -117,7 +123,7 @@ class ContactService
             $requests['company_id'] = $companyId;
             $guest = $this->guestService->store($requests);
         }
-        
+
         //開催回ごとのゲスト新規登録処理
         $eventGuestRequests = [
             'event_id' => $times,
@@ -182,15 +188,13 @@ class ContactService
     /**
      * 参加者カウント
      * 
-     * @param array $requests
      * @param int $times
+     * @param Guest $existGuest
+     * @param int $companyId
      * @return int
      */
-    public function guestCount(array $requests, int $times)
+    public function guestCount(int $times, Guest $existGuest = NULL, int $companyId = NULL)
     {
-        //申込者のデータを取得
-        $existGuest = Guest::where('email', '=', $requests['email'])->first();
-        
         //該当回の交流会に参加するゲストを取得
         $eventGuests = EventGuest::where('event_id', '=', $times);
 
@@ -201,6 +205,11 @@ class ContactService
             $eventGuests = $eventGuests->where('guest_id', '!=', $existGuest->id);
         }
         
+        //会社の参加人数をカウントする場合
+        if ($companyId) {
+            $eventGuests->where('company_id', '=', $companyId);
+        }
+
         //参加者をカウント
         $guestCount = $eventGuests->count();
         

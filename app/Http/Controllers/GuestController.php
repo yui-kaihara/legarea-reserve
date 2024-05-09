@@ -63,6 +63,9 @@ class GuestController extends Controller
         //登録処理
         $guest = $this->contactService->store($requests);
         
+        //開催回を設定（登録不可の場合リレーションできないため）
+        $guest->times = $requests['times'];
+        
         //メール送信処理
         $this->sendMailService->send($guest);
         

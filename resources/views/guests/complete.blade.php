@@ -3,7 +3,7 @@ $times = '';
 $email = '';
 $guest = session('guest');
 if ($guest) {
-    $times = ' 第'.$guest->event->times.'回';
+    $times = ' 第'.$guest->times.'回';
     $email = $guest->email.'宛てに';
 }
 @endphp
