@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ContactFormRequest;
-use App\Models\Guest;
+use App\Models\Event;
 use App\Services\BlastmailService;
 use App\Services\ContactService;
 use App\Services\EventService;
@@ -40,8 +40,10 @@ class GuestController extends Controller
      */
     public function create()
     {
+        $times = Event::max('times');
+        
         //交流会データを取得
-        $event = $this->eventService->getDetail();
+        $event = $this->eventService->getDetail((int)$times);
         
         //ビューに渡す
         return view('guests.create', ['event' => $event]);

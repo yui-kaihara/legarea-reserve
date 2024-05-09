@@ -40,6 +40,7 @@ class EventGuestService
      */
     public function destroy(int $eventId, int $guestId)
     {
+        //交流会IDとゲストIDが一致するものを削除
         $eventGuest = EventGuest::where([
             'event_id' => $eventId,
             'guest_id' => $guestId
