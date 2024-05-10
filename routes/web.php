@@ -24,5 +24,6 @@ Route::middleware([
 Route::name('admin.')->prefix('admin')->group(function () {
     Route::resource('guests', AdminGuestController::class);
     Route::post('guests/download', [AdminGuestController::class, 'download'])->name('guests.download');
+    Route::post('guests/import', [AdminGuestController::class, 'import'])->name('guests.import');
     Route::resource('events', EventController::class);
 });

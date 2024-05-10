@@ -10,15 +10,25 @@
 @endif
 
     <div class="w-11/12 lg:w-5/6 mx-auto py-10">
-        <form action="{{ route('admin.guests.download', ['event' => request()->input('event'), 'status' => request()->input('status')]) }}" method="POST" class="text-right">
+        <form action="{{ route('admin.guests.download', ['event' => request()->input('event'), 'status' => request()->input('status')]) }}" method="POST" class="mb-2 text-right">
             @csrf
-            <button class="cursor-pointer py-2 px-9 lg:py-3 lg:px-14 text-sm font-semibold rounded-lg border border-transparent bg-blue-100 text-blue-800 hover:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none">ダウンロード</button>
+            <button class="cursor-pointer w-32 lg:w-44 py-2 lg:py-3 lg:px-14 text-xs lg:text-sm font-semibold rounded-lg border border-transparent bg-blue-100 text-blue-800 hover:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none">ダウンロード</button>
+        </form>
+        <form action="{{ route('admin.guests.import') }}" method="POST" enctype="multipart/form-data" class="flex justify-end items-baseline text-right">
+            @csrf
+            <div>
+                <input type="file" name="uploadFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" class="w-48 lg:w-60 text-xs lg:text-sm" />
+@error('uploadFile')
+                <p class="mt-2 text-red-500 text-xs text-left">※{{ $message }}</p>
+@enderror
+            </div>
+            <button class="cursor-pointer w-32 lg:w-44 py-2 lg:py-3 lg:px-14 text-xs lg:text-sm font-semibold rounded-lg border border-transparent bg-orange-100 text-orange-600 hover:bg-orange-200 disabled:opacity-50 disabled:pointer-events-none">インポート</button>
         </form>
         <div class="flex justify-between items-end mb-2">
             <form action="javascript:void(0)">
                 @csrf
                 第
-                <select name="times" class="w-16 mt-2 px-4 border-gray-200 rounded-lg" id="is-change">
+                <select name="times" class="w-16 mt-2 px-4 border-gray-200 rounded-lg cursor-pointer" id="is-change">
 
 @foreach ($times as $time)
 @php
