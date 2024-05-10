@@ -6,21 +6,10 @@ namespace App\Services;
 use App\Models\Event;
 use App\Models\EventGuest;
 use App\Models\Guest;
-use App\Services\EventService;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class GuestService
 {
-    /**
-     * コンストラクタ
-     * 
-     * @param EventService $eventService
-     */
-    public function __construct(EventService $eventService)
-    {
-        $this->eventService = $eventService;
-    }
-
     /**
      * 一覧取得
      * 
