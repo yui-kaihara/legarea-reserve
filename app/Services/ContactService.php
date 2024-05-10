@@ -50,8 +50,11 @@ class ContactService
         $existGuest = Guest::where('email', '=', $requests['email'])->first(); //申込者のデータを取得
         $guestCount = $this->guestCount($times, $existGuest);
         
+        //該当の交流会情報を取得
+        $event = $this->eventService->getDetail($times);
+        
         //交流会の定員を取得
-        $capacity = $this->eventService->getDetail($times)->capacity;
+        $capacity = $event->capacity;
         
         //返却するゲストモデルを初期化
         $guest = new Guest($requests);
@@ -126,7 +129,7 @@ class ContactService
 
         //開催回ごとのゲスト新規登録処理
         $eventGuestRequests = [
-            'event_id' => $times,
+            'event_id' => $event->id,
             'guest_id' => $guest->id,
             'company_id' => $companyId
         ];

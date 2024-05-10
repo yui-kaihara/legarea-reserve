@@ -6,10 +6,21 @@ namespace App\Services;
 use App\Models\Event;
 use App\Models\EventGuest;
 use App\Models\Guest;
+use App\Services\EventService;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class GuestService
 {
+    /**
+     * コンストラクタ
+     * 
+     * @param EventService $eventService
+     */
+    public function __construct(EventService $eventService)
+    {
+        $this->eventService = $eventService;
+    }
+
     /**
      * 一覧取得
      * 
@@ -18,10 +29,10 @@ class GuestService
      * @param int $page
      * @return array
      */
-    public function getList(int $times, string $status = null, int $page = 10)
+    public function getList(int $eventId, string $status = null, int $page = 10)
     {
         //クエリ作成
-        $eventGuestIds = EventGuest::where('event_guests.event_id', $times)->pluck('guest_id');
+        $eventGuestIds = EventGuest::where('event_guests.event_id', $eventId)->pluck('guest_id');
         $query = Guest::select('guests.*')->whereIn('guests.id', $eventGuestIds);
 
         //statusテキストを設定

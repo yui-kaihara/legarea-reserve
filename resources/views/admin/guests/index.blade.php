@@ -9,8 +9,6 @@
     </p>
 @endif
 
-@if ($guests->total() > 0)
-
     <div class="w-11/12 lg:w-5/6 mx-auto py-10">
         <form action="{{ route('admin.guests.download', ['event' => request()->input('event'), 'status' => request()->input('status')]) }}" method="POST" class="text-right">
             @csrf
@@ -42,6 +40,9 @@ if ($event == $time) {
             </form>
             <p class="mb-2 pr-1 text-sm text-gray-600 text-right">合計 <span class="text-lg font-semibold">{{ $guests->total() }}</span> 名</p>
         </div>
+
+@if ($guests->total() > 0)
+
         <table class="block overflow-x-scroll md:overflow-x-auto text-center">
             <thead>
                 <tr class="bg-gray-200 text-xs font-medium text-gray-600">
@@ -83,12 +84,11 @@ if ($event == $time) {
             </tbody>
         </table>
         {{ $guests->links('vendor.pagination.tailwind1') }}
-    </div>
-
 @else
 
-    <p class="mt-10 text-center">現在予約はありません。</p>
+        <p class="mt-10 text-center">現在予約はありません。</p>
 
 @endif
 
+    </div>
 </x-app-layout>
