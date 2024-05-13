@@ -92,7 +92,7 @@ class ContactService
             
             //会社の参加予定人数
             $companyGuestCount = $this->guestCount($event->id, $existGuest, $companyId);
-dd($companyGuestCount);
+
             //1社2名の定員をオーバーしている場合は登録しない
             if ($companyGuestCount >= 2) {
 
