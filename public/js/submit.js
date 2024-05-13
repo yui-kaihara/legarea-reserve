@@ -1,8 +1,7 @@
-
 window.addEventListener('DOMContentLoaded', function () {
     
     //要素を取得
-    var selectElement = document.getElementById('is-change');
+    var selectElement = document.getElementById('is-submit');
     
     //変更が入った場合
     selectElement.addEventListener('change', function () {

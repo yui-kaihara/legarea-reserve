@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\EventFormRequest;
 use App\Models\Event;
 use App\Services\EventService;
+use Hashids\Hashids;
 
 class EventController extends Controller
 {
@@ -29,7 +30,19 @@ class EventController extends Controller
      */
     public function index()
     {
+        //交流会一覧を取得
         $events = $this->eventService->getList();
+        
+        //ハッシュ後の文字数指定  
+        $hashids = new Hashids('', 8);
+        
+        //エンコードしたIDを追加
+        foreach ($events as $event) {
+            
+            $encodeId = $hashids->encode($event->id);
+            $event->hashId = $encodeId;
+        }
+
         return view('admin.events.index', ['events' => $events]);
     }
 

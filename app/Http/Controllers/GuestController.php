@@ -9,6 +9,8 @@ use App\Services\BlastmailService;
 use App\Services\ContactService;
 use App\Services\EventService;
 use App\Services\SendMailService;
+use Illuminate\Http\Request;
+use Hashids\Hashids;
 
 class GuestController extends Controller
 {
@@ -36,14 +38,20 @@ class GuestController extends Controller
     /**
      * 登録画面表示
      * 
+     * @param Request $request
      * @return Illuminate\View\View
      */
-    public function create()
+    public function create(Request $request)
     {
-        $times = Event::max('times');
-        
+        //idパラメータを取得してデコード
+        $id = $request->input('id');
+        $decodeId = $hashids->decode($id)[0];
+
+        //開催回を取得
+        $times = Event::find($decodeId)->first()->times;
+        dd([$decodeId, $times]);
         //交流会データを取得
-        $event = $this->eventService->getDetail((int)$times);
+        $event = $this->eventService->getDetail($times);
         
         //ビューに渡す
         return view('guests.create', ['event' => $event]);

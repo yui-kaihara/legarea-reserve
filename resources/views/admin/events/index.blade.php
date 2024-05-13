@@ -1,5 +1,6 @@
 <x-app-layout>
     <x-slot name="navigation"></x-slot>
+    <x-slot name="script">js/copyText.js</x-slot>
     <x-slot name="header">交流会一覧</x-slot>
 
 @if (session('flash_message'))
@@ -36,6 +37,9 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ $event->capacity }}人</td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex items-center text-xs">
+                            <a href="javascript:void(0)" data-hash-id="{{ $event->hashId }}" data-times="{{ $event->times }}" class="bg-white hover:bg-gray-100 text-gray-500 font-semibold py-2 px-2 border border-gray-400 rounded shadow is-copyText">
+                                URL
+                            </a>
                             <a href="{{ route('admin.events.edit', [$event]) }}" class="bg-white hover:bg-gray-100 text-gray-500 font-semibold py-2 px-2 border border-gray-400 rounded shadow">
                                 編集
                             </a>

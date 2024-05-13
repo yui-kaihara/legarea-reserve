@@ -16,6 +16,7 @@ class EventService
     {
         //開催回の降順に10件ずつ取得
         $events = Event::orderby('times', 'desc')->paginate(10);
+        
         return $events;
     }
     
@@ -27,8 +28,7 @@ class EventService
      */
     public function getDetail(int $times)
     {
-        //開催回の日付が今日以降なら、交流会データを取得
-        //TODO:日付のチェックが必要か確認するwhere('date', '>=', now())
+        //交流会データを取得
         $event = Event::where('times', $times)->first();
         
         return $event;
