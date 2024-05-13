@@ -5,13 +5,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ContactFormRequest;
+use App\Http\Requests\ImportFileFormRequest;
 use App\Models\Event;
 use App\Models\Guest;
 use App\Services\BlastmailService;
 use App\Services\CompanyService;
 use App\Services\ContactService;
-use App\Services\DownloadService;
 use App\Services\EventService;
+use App\Services\FileOperateService;
 use App\Services\GuestService;
 use Illuminate\Http\Request;
 
@@ -23,24 +24,24 @@ class GuestController extends Controller
      * @param BlastmailService $blastmailService
      * @param CompanyService $companyService
      * @param ContactService $contactService
-     * @param DownloadService $downloadService
      * @param EventService $eventService
+     * @param FileOperateService $fileOperateService
      * @param GuestService $guestService
      */
     public function __construct(
         BlastmailService $blastmailService,
         CompanyService $companyService,
         ContactService $contactService,
-        DownloadService $downloadService,
         EventService $eventService,
+        FileOperateService $fileOperateService,
         GuestService $guestService
     )
     {
         $this->blastmailService = $blastmailService;
         $this->companyService = $companyService;
         $this->contactService = $contactService;
-        $this->downloadService = $downloadService;
         $this->eventService = $eventService;
+        $this->fileOperateService = $fileOperateService;
         $this->guestService = $guestService;
     }
 
@@ -204,7 +205,41 @@ class GuestController extends Controller
         $addFileName = $results[1];
 
         //Excelダウンロード
-        $this->downloadService->download($guests, $addFileName);
+        $this->fileOperateService->download($guests, $addFileName);
 
+    }
+    
+    /**
+     * インポート
+     * 
+     * @param ImportFileFormRequest $request
+     * @param void
+     */
+    public function import(ImportFileFormRequest $request)
+    {
+        //ファイル名を設定
+        $uploadFileName = 'upload_file.xlsx';
+
+        //ファイルを保存
+        $request->file('uploadFile')->storeAs('', $uploadFileName);
+
+        //インポートして登録用のデータを取得
+        $insertDatas = $this->fileOperateService->import($uploadFileName);
+
+        foreach ($insertDatas as $insertData) {
+            
+            //登録処理
+            $this->contactService->store($insertData);
+            
+            //配信用メールアドレスの入力がある場合
+            if ($insertData['stream_email']) {
+                
+                //ブラストメールへの反映をAPI経由で実行
+                $this->blastmailService->reflect($insertData);
+            }
+        }
+        
+        //一覧画面にリダイレクト
+        return redirect(route('admin.guests.index'))->with(['flash_message' => 'インポートが完了しました。', 'messageColor' => 'blue']);
     }
 }

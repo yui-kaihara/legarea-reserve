@@ -45,13 +45,13 @@ class ContactService
     {
         //開催回を取得
         $times = (int)$requests['times'];
-
-        //全体の参加予定人数を取得
-        $existGuest = Guest::where('email', '=', $requests['email'])->first(); //申込者のデータを取得
-        $guestCount = $this->guestCount($times, $existGuest);
         
         //該当の交流会情報を取得
         $event = $this->eventService->getDetail($times);
+
+        //全体の参加予定人数を取得
+        $existGuest = Guest::where('email', '=', $requests['email'])->first(); //申込者のデータを取得
+        $guestCount = $this->guestCount($event->id, $existGuest);
         
         //交流会の定員を取得
         $capacity = $event->capacity;
@@ -91,8 +91,8 @@ class ContactService
             $companyId = $existCompanyData->id;
             
             //会社の参加予定人数
-            $companyGuestCount = $this->guestCount($times, $existGuest, $companyId);
-            
+            $companyGuestCount = $this->guestCount($event->id, $existGuest, $companyId);
+
             //1社2名の定員をオーバーしている場合は登録しない
             if ($companyGuestCount >= 2) {
 
@@ -191,15 +191,15 @@ class ContactService
     /**
      * 参加者カウント
      * 
-     * @param int $times
+     * @param int $eventId
      * @param Guest $existGuest
      * @param int $companyId
      * @return int
      */
-    public function guestCount(int $times, Guest $existGuest = NULL, int $companyId = NULL)
+    public function guestCount(int $eventId, Guest $existGuest = NULL, int $companyId = NULL)
     {
         //該当回の交流会に参加するゲストを取得
-        $eventGuests = EventGuest::where('event_id', '=', $times);
+        $eventGuests = EventGuest::where('event_id', '=', $eventId);
 
         //申込者がすでに登録済みの場合
         if ($existGuest) {
@@ -207,7 +207,7 @@ class ContactService
             //ゲストIDが一致しないデータ（自分以外）を取得
             $eventGuests = $eventGuests->where('guest_id', '!=', $existGuest->id);
         }
-        
+
         //会社の参加人数をカウントする場合
         if ($companyId) {
             $eventGuests->where('company_id', '=', $companyId);
@@ -215,7 +215,7 @@ class ContactService
 
         //参加者をカウント
         $guestCount = $eventGuests->count();
-        
+
         return $guestCount;
     }
 }

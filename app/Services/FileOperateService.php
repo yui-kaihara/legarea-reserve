@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx as XlsxReader; 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx as XlsxWriter;
 
-class DownloadService
+class FileOperateService
 {
     /**
      * ダウンロード
@@ -55,12 +56,54 @@ class DownloadService
         $fileName = '第'.$guests[0]->event[0]->times.'回交流会予約者一覧'.$addFileName.'.xlsx';
 
         //Excelファイルをダウンロード
-        $writer = new Xlsx($spreadsheet);
+        $writer = new XlsxWriter($spreadsheet);
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header("Content-Disposition: attachment; filename=\"{$fileName}\"");
         header('Cache-Control: max-age=0');
         
         $writer->save('php://output');
         exit;
+    }
+    
+    /**
+     * インポート
+     * 
+     * @param string $fileName
+     * @return array
+     */
+    public function import(string $fileName)
+    {
+        //Excelファイルを読み込み
+        $reader = new XlsxReader();
+        
+        //保存したファイル情報を取得
+        $spreadsheet = $reader->load(storage_path().'/app/'.$fileName);
+        
+        $sheet = $spreadsheet->getSheet(0);
+
+        //読み込んだデータを配列にする
+        $sheetData = $sheet->toArray();
+        
+        //開催回を取得
+        $times = $sheetData[0][0];
+        
+        //登録データのみにする
+        unset($sheetData[0], $sheetData[1]);
+        
+        //登録用データを成型
+        $insertData = [];
+        foreach ($sheetData as $rowData) {
+            $insertData[] = [
+                'company_name' => $rowData[0],
+                'name' => $rowData[1],
+                'name_kana' => $rowData[2],
+                'age' => $rowData[3],
+                'email' => $rowData[4],
+                'stream_email' => $rowData[5],
+                'times' => $times
+            ];
+        }
+        
+        return $insertData;
     }
 }
