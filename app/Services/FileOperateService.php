@@ -80,9 +80,30 @@ class FileOperateService
         $spreadsheet = $reader->load(storage_path().'/app/'.$fileName);
         
         $sheet = $spreadsheet->getSheet(0);
-        //読み込んだsheetを配列にする
+
+        //読み込んだデータを配列にする
         $sheetData = $sheet->toArray();
         
-        //一括登録できる形にして返す
+        //開催回を取得
+        $times = $sheetData[0][0];
+        
+        //登録データのみにする
+        unset($sheetData[0], $sheetData[1]);
+        
+        //登録用データを成型
+        $insertData = [];
+        foreach ($sheetData as $rowData) {
+            $insertData[] = [
+                'company_name' => $rowData[0],
+                'name' => $rowData[1],
+                'name_kana' => $rowData[2],
+                'age' => $rowData[3],
+                'email' => $rowData[4],
+                'stream_email' => $rowData[5],
+                'times' => $times
+            ];
+        }
+        
+        return $insertData;
     }
 }

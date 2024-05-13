@@ -223,7 +223,23 @@ class GuestController extends Controller
         //ファイルを保存
         $request->file('uploadFile')->storeAs('', $uploadFileName);
 
-        //インポートして一括登録用のデータを取得
+        //インポートして登録用のデータを取得
         $insertDatas = $this->fileOperateService->import($uploadFileName);
+
+        foreach ($insertDatas as $insertData) {
+            
+            //登録処理
+            $this->contactService->store($insertData);
+            
+            //配信用メールアドレスの入力がある場合
+            if ($insertData['stream_email']) {
+                
+                //ブラストメールへの反映をAPI経由で実行
+                $this->blastmailService->reflect($insertData);
+            }
+        }
+        
+        //一覧画面にリダイレクト
+        return redirect(route('admin.guests.index'))->with(['flash_message' => 'インポートが完了しました。', 'messageColor' => 'blue']);
     }
 }

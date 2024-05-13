@@ -12,7 +12,7 @@
     <div class="w-11/12 lg:w-5/6 mx-auto py-10">
         <form action="{{ route('admin.guests.download', ['event' => request()->input('event'), 'status' => request()->input('status')]) }}" method="POST" class="mb-2 text-right">
             @csrf
-            <button class="cursor-pointer w-32 lg:w-44 py-2 lg:py-3 lg:px-14 text-xs lg:text-sm font-semibold rounded-lg border border-transparent bg-blue-100 text-blue-800 hover:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none">ダウンロード</button>
+            <button class="cursor-pointer w-32 lg:w-44 py-2 lg:px-14 text-xs lg:text-sm font-semibold rounded-lg border border-transparent bg-blue-100 text-blue-800 hover:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none">ダウンロード</button>
         </form>
         <form action="{{ route('admin.guests.import') }}" method="POST" enctype="multipart/form-data" class="flex justify-end items-baseline text-right">
             @csrf
@@ -22,7 +22,7 @@
                 <p class="mt-2 text-red-500 text-xs text-left">※{{ $message }}</p>
 @enderror
             </div>
-            <button class="cursor-pointer w-32 lg:w-44 py-2 lg:py-3 lg:px-14 text-xs lg:text-sm font-semibold rounded-lg border border-transparent bg-orange-100 text-orange-600 hover:bg-orange-200 disabled:opacity-50 disabled:pointer-events-none">インポート</button>
+            <button class="cursor-pointer w-32 lg:w-44 py-2 lg:px-14 text-xs lg:text-sm font-semibold rounded-lg border border-transparent bg-orange-100 text-orange-600 hover:bg-orange-200 disabled:opacity-50 disabled:pointer-events-none">インポート</button>
         </form>
         <div class="flex justify-between items-end mb-2">
             <form action="javascript:void(0)">
