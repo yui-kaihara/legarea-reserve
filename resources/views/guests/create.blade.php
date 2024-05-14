@@ -35,8 +35,23 @@
 @section('selectTimes')
     <input type="hidden" name="times" value="{{ $event->times }}" />
 @endsection
+
+@section('agreeCheck')
+    <div class="mt-8">
+        <div class="flex gap-2 md:gap-3">
+            <input type="checkbox" name="agreeCheck" class="mt-1 border-gray-400 rounded cursor-pointer" id="agreeCheck"@if(old('agreeCheck'))' checked="checked"@endif />
+            <label for="agreeCheck" class="font-normal text-sm leading-6">
+                「個人情報の取扱いについて」に同意する。<br />
+                個⼈情報の取り扱いについて、詳しくは弊社の<a href="https://www.legarea.jp/privacy" target="_blank" class="underline text-blue-500">プライバシーポリシー</a>をご覧ください。
+            </label>
+        </div>
+@error('agreeCheck')
+        <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
+@enderror
+    </div>
+@endsection
     
-    @include('common.guests.form', ['route' => route('guests.store'), 'submitText' => '申込'])
+    @include('common.guests.form', ['route' => route('guests.store'), 'submitText' => '申込', 'formAddClass' => ''])
 
 @else
 

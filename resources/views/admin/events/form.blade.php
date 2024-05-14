@@ -29,50 +29,50 @@ $capacity = old('capacity');
 @endisset
 
         <div>
-            <label class="flex gap-2 text-sm font-medium"><span class="align-text-top px-1 py-0.5 bg-red-500 rounded-sm text-white text-xs">必須</span> 開催回</label>
-            第 <input type="number" name="times" value="{{ $times }}" class="w-20 mt-2 px-4 border-gray-200 rounded-lg" /> 回
+            <label for="times" class="flex gap-2 text-sm font-medium"><span class="align-text-top px-1 py-0.5 bg-red-500 rounded-sm text-white text-xs">必須</span> 開催回</label>
+            第 <input type="number" name="times" value="{{ $times }}" class="w-20 mt-2 px-4 border-gray-200 rounded-lg" id="times" /> 回
 @error('times')
             <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
 @enderror
         </div>
         <div class="mt-8">
-            <label class="flex gap-2 text-sm font-medium"><span class="align-text-top px-1 py-0.5 bg-red-500 rounded-sm text-white text-xs">必須</span> 開催日</label>
-            <input type="date" name="date" value="{{ $date }}" class="w-full md:w-96 mt-2 px-4 border-gray-200 rounded-lg" />
+            <label for="date" class="flex gap-2 text-sm font-medium"><span class="align-text-top px-1 py-0.5 bg-red-500 rounded-sm text-white text-xs">必須</span> 開催日</label>
+            <input type="date" name="date" value="{{ $date }}" class="w-full md:w-96 mt-2 px-4 border-gray-200 rounded-lg" id="date" />
 @error('date')
             <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
 @enderror
         </div>
         <div class="mt-8">
-            <label class="flex gap-2 text-sm font-medium"><span class="align-text-top px-1 py-0.5 bg-red-500 rounded-sm rounded-sm text-white text-xs">必須</span> 開始時間</label>
-            <input type="time" name="start_time" value="{{ $startTime }}" class="w-full md:w-96 mt-2 px-4 border-gray-200 rounded-lg" />
+            <label for="startTime" class="flex gap-2 text-sm font-medium"><span class="align-text-top px-1 py-0.5 bg-red-500 rounded-sm rounded-sm text-white text-xs">必須</span> 開始時間</label>
+            <input type="time" name="start_time" value="{{ $startTime }}" class="w-full md:w-96 mt-2 px-4 border-gray-200 rounded-lg" id="startTime" />
 @error('start_time')
             <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
 @enderror
         </div>
         <div class="mt-8">
-            <label class="flex gap-2 text-sm font-medium"><span class="align-text-top px-1 py-0.5 bg-red-500 rounded-sm rounded-sm text-white text-xs">必須</span> 終了時間</label>
-            <input type="time" name="end_time" value="{{ $endTime }}" class="w-full md:w-96 mt-2 px-4 border-gray-200 rounded-lg" />
+            <label for="endTime" class="flex gap-2 text-sm font-medium"><span class="align-text-top px-1 py-0.5 bg-red-500 rounded-sm rounded-sm text-white text-xs">必須</span> 終了時間</label>
+            <input type="time" name="end_time" value="{{ $endTime }}" class="w-full md:w-96 mt-2 px-4 border-gray-200 rounded-lg" id="endTime" />
 @error('end_time')
             <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
 @enderror
         </div>
         <div class="mt-8">
-            <label class="flex gap-2 text-sm font-medium"><span class="align-text-top px-1 py-0.5 bg-red-500 rounded-sm text-white text-xs">必須</span> 場所</label>
-            <input type="text" name="place" value="{{ $place }}" class="w-full md:w-96 mt-2 px-4 border-gray-200 rounded-lg" />
+            <label for="place" class="flex gap-2 text-sm font-medium"><span class="align-text-top px-1 py-0.5 bg-red-500 rounded-sm text-white text-xs">必須</span> 場所</label>
+            <input type="text" name="place" value="{{ $place }}" class="w-full md:w-96 mt-2 px-4 border-gray-200 rounded-lg" id="place" />
 @error('place')
             <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
 @enderror
         </div>
         <div class="mt-8">
-            <label class="flex gap-2 text-sm font-medium"><span class="align-text-top px-1 py-0.5 bg-red-500 rounded-sm text-white text-xs">必須</span> 金額</label>
-            <input type="number" name="amount" value="{{ $amount }}" class="w-24 mt-2 px-4 border-gray-200 rounded-lg" /> 円
+            <label for="amount" class="flex gap-2 text-sm font-medium"><span class="align-text-top px-1 py-0.5 bg-red-500 rounded-sm text-white text-xs">必須</span> 金額</label>
+            <input type="number" name="amount" value="{{ $amount }}" class="w-24 mt-2 px-4 border-gray-200 rounded-lg" id="amount" /> 円
 @error('amount')
             <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
 @enderror
         </div>
         <div class="mt-8">
-            <label class="flex gap-2 text-sm font-medium"><span class="align-text-top px-1 py-0.5 bg-red-500 rounded-sm text-white text-xs">必須</span> 定員</label>
-            <input type="number" name="capacity" value="{{ $capacity }}" class="w-24 mt-2 px-4 border-gray-200 rounded-lg" /> 人
+            <label for="capacity" class="flex gap-2 text-sm font-medium"><span class="align-text-top px-1 py-0.5 bg-red-500 rounded-sm text-white text-xs">必須</span> 定員</label>
+            <input type="number" name="capacity" value="{{ $capacity }}" class="w-24 mt-2 px-4 border-gray-200 rounded-lg" id="capacity" /> 人
 @error('capacity')
             <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
 @enderror

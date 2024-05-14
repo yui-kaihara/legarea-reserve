@@ -29,7 +29,8 @@ class ContactFormRequest extends FormRequest
             'email' => 'required|email',
             'email_stream' => 'nullable|email',
             'company_name' => 'required',
-            'times' => 'required|integer'
+            'times' => 'required|integer',
+            'agreeCheck' => 'required'
         ];
     }
     
@@ -61,7 +62,21 @@ class ContactFormRequest extends FormRequest
 	        'email' => 'メールアドレス',
 	        'email_stream' => 'メールアドレス',
 	        'company_name' => '会社名',
-	        'times' => '開催回'
+	        'times' => '開催回',
+	        'agreeCheck' => 'チェック'
         ];
+    }
+
+    /**
+     * バリデーション前の処理
+     *
+     * @return void
+     */
+    protected function prepareForValidation(): void
+    {
+        //個人情報取扱チェックが入っていない場合
+        if (!$this->has('agreeCheck')) {
+            $this->merge(['agreeCheck' => null]);
+        }
     }
 }
