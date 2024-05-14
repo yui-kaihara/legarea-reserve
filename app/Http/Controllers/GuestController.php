@@ -9,6 +9,7 @@ use App\Services\BlastmailService;
 use App\Services\ContactService;
 use App\Services\EventService;
 use App\Services\SendMailService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Hashids\Hashids;
 
@@ -54,11 +55,14 @@ class GuestController extends Controller
         //交流会情報を取得
         $event = Event::find($decodeId);
         
+        //回答期限日時
+        $limitDateTime = Carbon::parse($event->date)->subDay()->setTime(23, 59, 59);
+
         //交流会詳細を初期化
         $eventDetail = [];
-        
-        // 定員オーバーでなければ、交流会詳細を取得
-        if ($guestCount < $event->capacity) {
+
+        // 定員オーバーでない+回答期限より前であれば、交流会詳細を取得
+        if (($guestCount < $event->capacity) && ($limitDateTime >= now())) {
             $eventDetail = $this->eventService->getDetail($event->times, TRUE);
         }
         

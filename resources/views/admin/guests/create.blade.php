@@ -25,11 +25,16 @@ $selected = (old('times') == $time) ? ' selected="selected"' : '';
     <div class="mt-8">
         <div class="flex gap-2 md:gap-3">
 @php
-$checked = (old('registCheck')) ? ' checked="checked"' : '';
+$checked = '';
+if (!old()) {
+    $checked = ' checked="checked"';
+} elseif (old('capacityCheck')) {
+    $checked = ' checked="checked"';
+}
 @endphp
-            <input type="checkbox" name="registCheck" class="mt-1 border-gray-400 rounded cursor-pointer" id="registCheck"{{ $checked }} />
-            <label for="registCheck" class="font-normal text-sm">
-                定員オーバーでも登録可
+            <input type="checkbox" name="capacityCheck" class="mt-0.5 border-gray-400 rounded cursor-pointer" id="capacityCheck"{{ $checked }} />
+            <label for="capacityCheck" class="font-normal text-sm">
+                定員オーバーチェック
             </label>
         </div>
     </div>

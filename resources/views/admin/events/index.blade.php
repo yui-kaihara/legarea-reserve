@@ -23,6 +23,7 @@
                     <th scope="col" class="w-1/12 py-3">金額</th>
                     <th scope="col" class="w-1/12 py-3">定員</th>
                     <th scope="col" class="w-1/12 py-3"></th>
+                    <th scope="col" class="w-1/12 py-3"></th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-300">
@@ -35,6 +36,9 @@
                     <td class="px-6 py-4 text-sm text-gray-800">{{ $event->place }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ $event->amount }}円</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ $event->capacity }}人</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        
+                    </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex items-center text-xs">
                             <a href="javascript:void(0)" data-hash-id="{{ $event->hashId }}" data-times="{{ $event->times }}" class="bg-white hover:bg-gray-100 text-gray-500 font-semibold py-2 px-2 border border-gray-400 rounded shadow is-copyText">

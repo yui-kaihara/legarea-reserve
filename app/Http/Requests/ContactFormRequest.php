@@ -31,7 +31,7 @@ class ContactFormRequest extends FormRequest
             'company_name' => 'required',
             'times' => 'required|integer',
             'agreeCheck' => 'required',
-            'registCheck' => 'nullable'
+            'capacityCheck' => 'nullable'
         ];
     }
     
@@ -80,9 +80,9 @@ class ContactFormRequest extends FormRequest
             $this->merge(['agreeCheck' => null]);
         }
         
-        //登録可能チェックが入っていない場合
-        if (!$this->has('registCheck')) {
-            $this->merge(['registCheck' => null]);
+        //定員オーバーチェックが入っていない場合
+        if (!$this->has('capacityCheck')) {
+            $this->merge(['capacityCheck' => null]);
         }
     }
 }
