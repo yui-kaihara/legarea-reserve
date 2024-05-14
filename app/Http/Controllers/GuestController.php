@@ -45,11 +45,12 @@ class GuestController extends Controller
     {
         //idパラメータを取得してデコード
         $id = $request->input('id');
+        $hashids = new Hashids('', 8);
         $decodeId = $hashids->decode($id)[0];
 
         //開催回を取得
-        $times = Event::find($decodeId)->first()->times;
-        dd([$decodeId, $times]);
+        $times = Event::find($decodeId)->times;
+
         //交流会データを取得
         $event = $this->eventService->getDetail($times);
         
