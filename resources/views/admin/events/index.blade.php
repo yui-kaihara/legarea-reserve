@@ -22,7 +22,7 @@
                     <th scope="col" class="min-w-60 w-5/12 py-3">場所</th>
                     <th scope="col" class="w-1/12 py-3">金額</th>
                     <th scope="col" class="w-1/12 py-3">定員</th>
-                    <th scope="col" class="w-1/12 py-3"></th>
+                    <th scope="col" class="w-1/12 py-3">公開</th>
                     <th scope="col" class="w-1/12 py-3"></th>
                 </tr>
             </thead>
@@ -37,7 +37,10 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ $event->amount }}円</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ $event->capacity }}人</td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        
+                        <label>
+                            <input v-model="isCheck" type="checkbox" class="peer sr-only" />
+                            <span class="block w-[2em] cursor-pointer bg-gray-500 rounded-full p-[1px] after:block after:h-[1em] after:w-[1em] after:rounded-full after:bg-white after:transition peer-checked:bg-blue-500 peer-checked:after:translate-x-[calc(100%-2px)]"></span>
+                        </label>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex items-center text-xs">
