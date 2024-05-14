@@ -47,15 +47,23 @@ class GuestController extends Controller
         $id = $request->input('id');
         $hashids = new Hashids('', 8);
         $decodeId = $hashids->decode($id)[0];
+        
+        //参加人数を取得
+        $guestCount = $this->contactService->guestCount($decodeId);
 
-        //開催回を取得
-        $times = Event::find($decodeId)->times;
-
-        //交流会データを取得
-        $event = $this->eventService->getDetail($times);
+        //交流会情報を取得
+        $event = Event::find($decodeId);
+        
+        //交流会詳細を初期化
+        $eventDetail = [];
+        
+        // 定員オーバーでなければ、交流会詳細を取得
+        if ($guestCount < $event->capacity) {
+            $eventDetail = $this->eventService->getDetail($event->times, TRUE);
+        }
         
         //ビューに渡す
-        return view('guests.create', ['event' => $event]);
+        return view('guests.create', ['times' => $event->times, 'event' => $eventDetail]);
     }
 
     /**

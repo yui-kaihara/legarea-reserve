@@ -26,11 +26,19 @@ class EventService
      * @param int $times
      * @return Event
      */
-    public function getDetail(int $times)
+    public function getDetail(int $times, bool $dateFlag = FALSE)
     {
         //交流会データを取得
-        $event = Event::where('times', $times)->first();
+        $query = Event::where('times', $times);
         
+        //開催日時が現在以降かどうかチェック
+        if ($dateFlag) {
+            
+            $now = now();
+            $event = $query->where('date', '>=', $now->format('Y-m-d'))->where('start_time', '>', $now->format('H:i:s'));
+        }
+
+        $event = $query->first();
         return $event;
     }
     

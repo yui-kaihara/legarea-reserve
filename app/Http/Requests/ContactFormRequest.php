@@ -30,7 +30,8 @@ class ContactFormRequest extends FormRequest
             'email_stream' => 'nullable|email',
             'company_name' => 'required',
             'times' => 'required|integer',
-            'agreeCheck' => 'required'
+            'agreeCheck' => 'required',
+            'registCheck' => 'nullable'
         ];
     }
     
@@ -77,6 +78,11 @@ class ContactFormRequest extends FormRequest
         //個人情報取扱チェックが入っていない場合
         if (!$this->has('agreeCheck')) {
             $this->merge(['agreeCheck' => null]);
+        }
+        
+        //登録可能チェックが入っていない場合
+        if (!$this->has('registCheck')) {
+            $this->merge(['registCheck' => null]);
         }
     }
 }

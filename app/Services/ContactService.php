@@ -59,8 +59,8 @@ class ContactService
         //返却するゲストモデルを初期化
         $guest = new Guest($requests);
 
-        //定員をオーバーしている場合は登録しない
-        if ($guestCount >= $capacity) {
+        //登録可能チェックがnull+定員をオーバーしている場合は登録しない
+        if (!$requests['registCheck'] && ($guestCount >= $capacity)) {
             
             //ゲストモデルを返却
             $guest->result = FALSE; //登録結果（不可）
@@ -93,8 +93,8 @@ class ContactService
             //会社の参加予定人数
             $companyGuestCount = $this->guestCount($event->id, $existGuest, $companyId);
 
-            //1社2名の定員をオーバーしている場合は登録しない
-            if ($companyGuestCount >= 2) {
+            //登録可能チェックがnull+1社2名の定員をオーバーしている場合は登録しない
+            if (!$requests['registCheck'] && ($companyGuestCount >= 2)) {
 
                 //ゲストモデルを返却
                 $guest->result = FALSE;

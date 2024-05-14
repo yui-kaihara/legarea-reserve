@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-slot name="header">株式会社LEGAREA {{ ($event) ? '第'.$event->times.'回' : '' }}交流会 申込フォーム</x-slot>
+    <x-slot name="header">株式会社LEGAREA 第{{ $times }}回交流会 申込フォーム</x-slot>
 
 @if ($event)
 
@@ -36,10 +36,13 @@
     <input type="hidden" name="times" value="{{ $event->times }}" />
 @endsection
 
-@section('agreeCheck')
+@section('checkbox')
     <div class="mt-8">
         <div class="flex gap-2 md:gap-3">
-            <input type="checkbox" name="agreeCheck" class="mt-1 border-gray-400 rounded cursor-pointer" id="agreeCheck"@if(old('agreeCheck'))' checked="checked"@endif />
+@php
+$checked = (old('agreeCheck')) ? ' checked="checked"' : '';
+@endphp
+            <input type="checkbox" name="agreeCheck" class="mt-1 border-gray-400 rounded cursor-pointer" id="agreeCheck"{{ $checked }} />
             <label for="agreeCheck" class="font-normal text-sm leading-6">
                 「個人情報の取扱いについて」に同意する。<br />
                 個⼈情報の取り扱いについて、詳しくは弊社の<a href="https://www.legarea.jp/privacy" target="_blank" class="underline text-blue-500">プライバシーポリシー</a>をご覧ください。
@@ -55,7 +58,13 @@
 
 @else
 
-    <p class="mt-20 mb-10 text-center">現在、開催予定の交流会はございません。<br />次回開催までしばらくお待ちください。</p>
+    <div class="text-center">
+        <div class="inline-block w-auto lg:w-2/5 mt-5 mx-3 md:mx-0 py-6 px-4 md:px-8 bg-white border border-gray-200 rounded-lg shadow text-left text-sm leading-6">
+            <p class="mb-3 text-base md:text-lg font-semibold">株式会社LEGAREA 第{{ $times }}回交流会</p>
+            <p class="mb-3">「第{{ $times }}回交流会」の回答の受け付けは終了しました。<br />間違いであると思われる場合は、以下までお問い合わせください。</p>
+            <p>株式会社LEGAREA 営業担当<br />{{ config('contacts.name') }} （Tel：{{ config('contacts.tel') }}）</p>
+        </div>
+    </div>
 
 @endif
     
