@@ -24,15 +24,16 @@ $selected = (old('times') == $time) ? ' selected="selected"' : '';
 @section('checkbox')
     <div class="mt-8">
         <div class="flex gap-2 md:gap-3">
-            <input type="checkbox" name="registCheck" class="mt-1 border-gray-400 rounded cursor-pointer" id="registCheck"@if(old('registCheck'))' checked="checked"@endif />
-            <label for="registCheck" class="font-normal text-sm leading-6">
-                  定員オーバーでも登録可
+@php
+$checked = (old('registCheck')) ? ' checked="checked"' : '';
+@endphp
+            <input type="checkbox" name="registCheck" class="mt-1 border-gray-400 rounded cursor-pointer" id="registCheck"{{ $checked }} />
+            <label for="registCheck" class="font-normal text-sm">
+                定員オーバーでも登録可
             </label>
         </div>
-@error('registCheck')
-        <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
-@enderror
     </div>
+    <input type="hidden" name="agreeCheck" value="on" />
 @endsection
 
     @include('common.guests.form', ['route' => route('admin.guests.store'), 'submitText' => '登録', 'formAddClass' => 'md:w-1/3'])
