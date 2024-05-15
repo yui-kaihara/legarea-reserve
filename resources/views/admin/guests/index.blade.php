@@ -28,7 +28,7 @@
             <form action="javascript:void(0)">
                 @csrf
                 第
-                <select name="times" class="w-16 mt-2 px-4 border-gray-200 rounded-lg cursor-pointer" id="is-submit">
+                <select name="times" class="w-16 mt-2 px-4 border-gray-200 rounded-lg cursor-point is-submit">
 
 @foreach ($times as $time)
 @php

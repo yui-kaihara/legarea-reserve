@@ -47,7 +47,7 @@ class Event extends Model
      *
      * @array
      */
-    protected $fillable = ['times', 'date', 'start_time', 'end_time', 'place', 'amount', 'capacity'];
+    protected $fillable = ['times', 'date', 'start_time', 'end_time', 'place', 'amount', 'capacity', 'is_public'];
 
     /*
      * 交流会に参加するユーザを取得

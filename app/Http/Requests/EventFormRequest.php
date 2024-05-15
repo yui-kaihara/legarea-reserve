@@ -29,7 +29,8 @@ class EventFormRequest extends FormRequest
             'end_time' => 'required',
             'place' => 'required',
             'amount' => 'required|integer',
-            'capacity' => 'required|integer'
+            'capacity' => 'required|integer',
+            'is_public' => 'required'
         ];
     }
     
@@ -63,5 +64,17 @@ class EventFormRequest extends FormRequest
             'amount' => '金額',
             'capacity' => '定員'
         ];
+    }
+    
+    /**
+     * バリデーション前の処理
+     *
+     * @return void
+     */
+    protected function prepareForValidation(): void
+    {
+        //公開フラグの値を調整
+        $publicFlag = ($this->has('is_public')) ? 1 : 0;
+        $this->merge(['is_public' => $publicFlag]);
     }
 }

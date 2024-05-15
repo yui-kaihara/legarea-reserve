@@ -13,8 +13,6 @@ window.addEventListener('DOMContentLoaded', function () {
             var hashId = this.dataset.hashId;
             var copyText = protocol + '//' + hostname + '?id=' + hashId;
             
-            // var copyText = 'https://app.seslinker.com?id=' + hashId;
-    
             //テキストをクリップボードにコピーする
             navigator.clipboard.writeText(copyText);
         

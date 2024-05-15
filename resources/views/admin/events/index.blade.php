@@ -1,6 +1,7 @@
 <x-app-layout>
     <x-slot name="navigation"></x-slot>
     <x-slot name="script">js/copyText.js</x-slot>
+    <x-slot name="script">js/submit.js</x-slot>
     <x-slot name="header">交流会一覧</x-slot>
 
 @if (session('flash_message'))
@@ -37,13 +38,26 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ $event->amount }}円</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ $event->capacity }}人</td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <form action="{{ route('admin.events.update', [$event->id]) }}" method="post">
+                        <form action="{{ route('admin.events.update', [$event]) }}" method="post" name="submitForm">
                             @csrf
                             @method('PUT')
                             <label>
-                                <input v-model="isCheck" type="checkbox" name="publicFlag" class="peer sr-only" />
+@php
+$checked = '';
+if ($event->is_public) {
+    $checked = ' checked="checked"';
+}
+@endphp
+                                <input v-model="isCheck" type="checkbox" name="is_public" class="peer hidden is-submit"{{ $checked }} />
                                 <span class="block w-[2em] cursor-pointer bg-gray-500 rounded-full p-[1px] after:block after:h-[1em] after:w-[1em] after:rounded-full after:bg-white after:transition peer-checked:bg-blue-500 peer-checked:after:translate-x-[calc(100%-2px)]"></span>
                             </label>
+                            <input type="hidden" name="times" value="{{ $event->times }}" />
+                            <input type="hidden" name="date" value="{{ $event->date }}" />
+                            <input type="hidden" name="start_time" value="{{ $event->start_time }}" />
+                            <input type="hidden" name="end_time" value="{{ $event->end_time }}" />
+                            <input type="hidden" name="place" value="{{ $event->place }}" />
+                            <input type="hidden" name="amount" value="{{ $event->amount }}" />
+                            <input type="hidden" name="capacity" value="{{ $event->capacity }}" />
                         </form>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
