@@ -47,7 +47,7 @@
                             <label>
 @php
 $checked = '';
-if ($event->is_public) {
+if ($event->publicFlag) {
     $checked = ' checked="checked"';
 }
 @endphp

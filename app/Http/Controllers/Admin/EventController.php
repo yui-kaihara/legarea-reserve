@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EventFormRequest;
 use App\Models\Event;
+use App\Services\ContactService;
 use App\Services\EventService;
 use Hashids\Hashids;
 
@@ -14,12 +15,15 @@ class EventController extends Controller
     /**
      * コンストラクタ
      * 
+     * @param ContactService $contactService
      * @param EventService $eventService
      */
     public function __construct(
+        ContactService $contactService,
         EventService $eventService
     )
     {
+        $this->contactService = $contactService;
         $this->eventService = $eventService;
     }
 
@@ -36,11 +40,18 @@ class EventController extends Controller
         //ハッシュ後の文字数指定  
         $hashids = new Hashids('', 8);
         
-        //エンコードしたIDを追加
         foreach ($events as $event) {
             
+            //エンコードしたIDを追加
             $encodeId = $hashids->encode($event->id);
             $event->hashId = $encodeId;
+            
+            //参加人数を取得
+            $guestCount = $this->contactService->guestCount($event->id);
+            
+            //公開状況を取得して追加
+            $publicStatus = $this->eventService->getPublicStatus($event, $guestCount);
+            $event->publicFlag = $publicStatus;
         }
 
         return view('admin.events.index', ['events' => $events]);

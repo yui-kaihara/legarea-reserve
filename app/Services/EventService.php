@@ -85,8 +85,8 @@ class EventService
         //回答期限日時
         $limitDateTime = Carbon::parse($event->date)->subDay()->setTime(23, 59, 59);
         
-        //「定員オーバーでない+回答期限より前」または「公開フラグが2」であれば、公開
-        if ((($guestCount < $event->capacity) && ($limitDateTime >= now())) || ($event->is_public === 2)) {
+        //「公開フラグが0でない+定員オーバーでない+回答期限より前」または「公開フラグが2」であれば、公開
+        if ((($event->is_public !== 0) && ($guestCount < $event->capacity) && ($limitDateTime >= now())) || ($event->is_public === 2)) {
             $publicStatus = TRUE;
         }
         
