@@ -10,10 +10,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
             //要素に値があればその値のURLに遷移する
             if (this.value !== '') {
-                // window.location.href = this.value;
+                window.location.href = this.value;
                 var form = this.closest('form');
                 form.submit();
             }
         });
     }
+    
+    return false;
 });

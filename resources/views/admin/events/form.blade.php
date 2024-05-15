@@ -77,6 +77,7 @@ $capacity = old('capacity');
             <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
 @enderror
         </div>
+        <input type="hidden" name="is_public" value="1" />
         <div class="flex justify-center mt-10">
             <input type="submit" value="{{ $submitText }}" class="w-40 cursor-pointer py-3 px-4 text-sm font-semibold rounded-lg border border-transparent bg-blue-100 text-blue-800 hover:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none" />
         </div>

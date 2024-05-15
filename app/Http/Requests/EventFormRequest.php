@@ -73,8 +73,9 @@ class EventFormRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
-        //公開フラグの値を調整
-        $publicFlag = ($this->has('is_public')) ? 1 : 0;
-        $this->merge(['is_public' => $publicFlag]);
+        //公開フラグチェックが入っていない場合
+        if (!$this->has('is_public')) {
+            $this->merge(['is_public' => 0]);
+        }
     }
 }

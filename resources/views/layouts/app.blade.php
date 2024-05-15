@@ -14,14 +14,10 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+@yield('scripts')
+
         <!-- Styles -->
         @livewireStyles
-
-<!--JS読み込み-->
-@if (isset($script))
-        <script src="{{ asset($script) }}"></script>
-@endif
-
     </head>
     <body class="font-sans antialiased">
         <x-banner />
