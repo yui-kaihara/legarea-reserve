@@ -52,9 +52,9 @@ $checked = (old('agreeCheck')) ? ' checked="checked"' : '';
         <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
 @enderror
     </div>
-    <input type="checkbox" name="capacityCheck" value="on" />
+    <input type="hidden" name="capacityCheck" value="on" />
 @endsection
-    
+
     @include('common.guests.form', ['route' => route('guests.store'), 'submitText' => '申込', 'formAddClass' => ''])
 
 @else

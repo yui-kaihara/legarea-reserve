@@ -17,14 +17,14 @@ $streamEmail = old('stream_email');
         @method('PUT')
         
 @php
-        $companyName = $guest->company->company_name;
-        $name = $guest->name;
-        $nameKana = $guest->name_kana;
-        $age = $guest->age;
-        $email = $guest->email;
-        if ($guest->stream_email) {
-            $streamEmail = $guest->stream_email;
-        }
+$companyName = $guest->company->company_name;
+$name = $guest->name;
+$nameKana = $guest->name_kana;
+$age = $guest->age;
+$email = $guest->email;
+if ($guest->stream_email) {
+    $streamEmail = $guest->stream_email;
+}
 @endphp
 @endisset
 
