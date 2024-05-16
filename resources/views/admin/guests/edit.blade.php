@@ -6,6 +6,10 @@
     <input type="hidden" name="times" value="{{ $guest->event[0]->times }}" />
 @endsection
 
+@section('checkbox')
+    <input type="hidden" name="agreeCheck" value="on" />
+@endsection
+
     @include('common.guests.form', ['route' => route('admin.guests.update', [$guest]), 'submitText' => '更新', 'formAddClass' => 'md:w-1/3'])
 
 </x-app-layout>
