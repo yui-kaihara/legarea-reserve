@@ -176,8 +176,11 @@ class GuestController extends Controller
      */
     public function destroy(Request $request, int $id)
     {
+        //交流会IDを取得
+        $eventId = $this->eventService->getDetail((int)$request['times'])->id;
+
         //削除処理
-        $this->contactService->destroy((int)$request['times'], $id);
+        $this->contactService->destroy($eventId, $id);
         
         //一覧画面にリダイレクト
         return redirect(route('admin.guests.index'))->with(['flash_message' => 'キャンセルが完了しました。', 'messageColor' => 'blue']);
