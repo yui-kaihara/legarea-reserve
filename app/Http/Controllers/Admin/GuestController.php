@@ -58,7 +58,7 @@ class GuestController extends Controller
         
         //eventパラメータを取得
         $event = $request->input('event');
-        
+
         //交流会IDを取得
         $event = ($event) ?? Event::max('times');
         $eventId = $this->eventService->getDetail((int)$event)->id;
@@ -69,9 +69,9 @@ class GuestController extends Controller
         //交流会の開催回一覧を取得
         $events = $this->eventService->getList();
         $times = $events->pluck('times');
-
+        
         //ビューに渡す
-        return view('admin.guests.index', ['guests' => $results[0], 'nextTime' => $event, 'statusText' => $results[1], 'times' => $times]);
+        return view('admin.guests.index', ['guests' => $results[0], 'statusText' => $results[1], 'times' => $times]);
     }
 
     /**
