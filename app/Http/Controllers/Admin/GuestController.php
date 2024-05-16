@@ -195,11 +195,14 @@ class GuestController extends Controller
     public function download(Request $request)
     {
         //パラメータを取得
-        $event = ($request->input('event')) ?? Event::max('times');
+        $times = ($request->input('event')) ?? Event::max('times');
         $status = $request->input('status');
+        
+        //交流会IDを取得
+        $eventId = $this->eventService->getDetail((int)$times)->id;
 
         //ゲスト一覧関連のデータを取得
-        $results = $this->guestService->getList((int)$event, $status, 0);
+        $results = $this->guestService->getList($eventId, $status, 0);
 
         //ゲスト一覧
         $guests = $results[0]->all();
@@ -208,7 +211,7 @@ class GuestController extends Controller
         $addFileName = $results[1];
 
         //Excelダウンロード
-        $this->fileOperateService->download($guests, $addFileName);
+        $this->fileOperateService->download($guests, (int)$times, $addFileName);
 
     }
     
