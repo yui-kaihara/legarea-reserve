@@ -14,5 +14,5 @@ LEGAREA事務局です。
 今後ともよろしくお願いいたします。
 
 ■緊急連絡先：
-LEGAREA小野村 （k-onomura@legarea.jp）
-Tel：070-2314-5927
+LEGAREA{{ config('contacts.name') }} （{{ config('contacts.email') }}）
+Tel：{{ config('contacts.tel') }}

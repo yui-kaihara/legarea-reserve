@@ -9,6 +9,8 @@ use App\Services\BlastmailService;
 use App\Services\ContactService;
 use App\Services\EventService;
 use App\Services\SendMailService;
+use Illuminate\Http\Request;
+use Hashids\Hashids;
 
 class GuestController extends Controller
 {
@@ -36,17 +38,44 @@ class GuestController extends Controller
     /**
      * 登録画面表示
      * 
+     * @param Request $request
      * @return Illuminate\View\View
      */
-    public function create()
+    public function create(Request $request)
     {
-        $times = Event::max('times');
+        //idパラメータを取得
+        $id = ($request->input('id')) ?? '';
         
-        //交流会データを取得
-        $event = $this->eventService->getDetail((int)$times);
+        //idをデコード
+        $hashids = new Hashids('', 8);
+        $decodeIds = $hashids->decode($id);
+        
+        //idが取得できなければ404
+        if (!$decodeIds) {
+            abort(404);
+        }
+        
+        $decodeId = $hashids->decode($id)[0];
+
+        //交流会情報を取得
+        $event = Event::find($decodeId);
+        
+        //参加人数を取得
+        $guestCount = $this->contactService->guestCount($decodeId);
+        
+        //公開状況を取得
+        $publicStatus = $this->eventService->getPublicStatus($event, $guestCount);
+
+        //交流会詳細を初期化
+        $eventDetail = [];
+
+        //公開であれば、交流会詳細を取得
+        if ($publicStatus) {
+            $eventDetail = $this->eventService->getDetail($event->times, TRUE);
+        }
         
         //ビューに渡す
-        return view('guests.create', ['event' => $event]);
+        return view('guests.create', ['times' => $event->times, 'event' => $eventDetail]);
     }
 
     /**

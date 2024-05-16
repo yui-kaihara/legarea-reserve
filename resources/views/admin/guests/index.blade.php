@@ -1,6 +1,10 @@
 <x-app-layout>
     <x-slot name="navigation"></x-slot>
-    <x-slot name="script">js/submit.js</x-slot>
+
+@section('scripts')
+    @vite(['resources/js/submit.js'])
+@endsection
+
     <x-slot name="header">予約者一覧{{ $statusText }}</x-slot>
 
 @if (session('flash_message'))
@@ -28,7 +32,7 @@
             <form action="javascript:void(0)">
                 @csrf
                 第
-                <select name="times" class="w-16 mt-2 px-4 border-gray-200 rounded-lg cursor-pointer" id="is-change">
+                <select name="times" class="w-16 mt-2 px-4 border-gray-200 rounded-lg cursor-point is-submit">
 
 @foreach ($times as $time)
 @php

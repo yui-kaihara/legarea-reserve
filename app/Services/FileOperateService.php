@@ -13,10 +13,11 @@ class FileOperateService
      * ダウンロード
      * 
      * @param array $guests
+     * @param int $times
      * @param string $addFileName
      * @return void
      */
-    public function download(array $guests, string $addFileName = '')
+    public function download(array $guests, int $times, string $addFileName = '')
     {
         $spreadsheet = new Spreadsheet();
         
@@ -51,9 +52,9 @@ class FileOperateService
             //太字
             $sheet->getStyle($i.'1')->getFont()->setBold(true)->setSize(10);
         }
-        
+
         //ファイル名を設定
-        $fileName = '第'.$guests[0]->event[0]->times.'回交流会予約者一覧'.$addFileName.'.xlsx';
+        $fileName = '第'.$times.'回交流会予約者一覧'.$addFileName.'.xlsx';
 
         //Excelファイルをダウンロード
         $writer = new XlsxWriter($spreadsheet);
@@ -100,7 +101,8 @@ class FileOperateService
                 'age' => $rowData[3],
                 'email' => $rowData[4],
                 'stream_email' => $rowData[5],
-                'times' => $times
+                'times' => $times,
+                'capacityCheck' => 'on'
             ];
         }
         

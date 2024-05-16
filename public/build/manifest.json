@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-CUjJMrdH.css",
+    "file": "assets/app-DT37FOty.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
@@ -8,6 +8,18 @@
     "file": "assets/app-D2jpX1vH.js",
     "name": "app",
     "src": "resources/js/app.js",
+    "isEntry": true
+  },
+  "resources/js/copyText.js": {
+    "file": "assets/copyText-BHcR7SdU.js",
+    "name": "copyText",
+    "src": "resources/js/copyText.js",
+    "isEntry": true
+  },
+  "resources/js/submit.js": {
+    "file": "assets/submit-BNscI2Et.js",
+    "name": "submit",
+    "src": "resources/js/submit.js",
     "isEntry": true
   }
 }

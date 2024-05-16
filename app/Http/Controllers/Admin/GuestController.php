@@ -58,7 +58,7 @@ class GuestController extends Controller
         
         //eventパラメータを取得
         $event = $request->input('event');
-        
+
         //交流会IDを取得
         $event = ($event) ?? Event::max('times');
         $eventId = $this->eventService->getDetail((int)$event)->id;
@@ -69,9 +69,9 @@ class GuestController extends Controller
         //交流会の開催回一覧を取得
         $events = $this->eventService->getList();
         $times = $events->pluck('times');
-
+        
         //ビューに渡す
-        return view('admin.guests.index', ['guests' => $results[0], 'nextTime' => $event, 'statusText' => $results[1], 'times' => $times]);
+        return view('admin.guests.index', ['guests' => $results[0], 'statusText' => $results[1], 'times' => $times]);
     }
 
     /**
@@ -195,11 +195,14 @@ class GuestController extends Controller
     public function download(Request $request)
     {
         //パラメータを取得
-        $event = ($request->input('event')) ?? Event::max('times');
+        $times = ($request->input('event')) ?? Event::max('times');
         $status = $request->input('status');
+        
+        //交流会IDを取得
+        $eventId = $this->eventService->getDetail((int)$times)->id;
 
         //ゲスト一覧関連のデータを取得
-        $results = $this->guestService->getList((int)$event, $status, 0);
+        $results = $this->guestService->getList($eventId, $status, 0);
 
         //ゲスト一覧
         $guests = $results[0]->all();
@@ -208,7 +211,7 @@ class GuestController extends Controller
         $addFileName = $results[1];
 
         //Excelダウンロード
-        $this->fileOperateService->download($guests, $addFileName);
+        $this->fileOperateService->download($guests, (int)$times, $addFileName);
 
     }
     

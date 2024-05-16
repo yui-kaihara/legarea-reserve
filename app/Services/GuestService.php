@@ -52,7 +52,7 @@ class GuestService
         }
 
         //会社IDの昇順にソート、ページネーションを設定して取得
-        $guests = $query->orderby('company_id')->paginate($page);
+        $guests = $query->orderby('company_id')->paginate($page)->withQueryString();
         
         //配列を返却（ゲストモデル、新規or2回目以降）
         return [$guests, $statusText]; 

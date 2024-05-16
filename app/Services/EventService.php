@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\Event;
+use Carbon\Carbon;
 
 class EventService
 {
@@ -27,10 +28,8 @@ class EventService
      */
     public function getDetail(int $times)
     {
-        //開催回の日付が今日以降なら、交流会データを取得
-        //TODO:日付のチェックが必要か確認するwhere('date', '>=', now())
+        //交流会データを取得
         $event = Event::where('times', $times)->first();
-        
         return $event;
     }
     
@@ -69,5 +68,28 @@ class EventService
     {
         $event = Event::find($id);
         $event->delete();
+    }
+    
+    /**
+     * 公開状況を取得
+     * 
+     * @param Event $event
+     * @param int $guestCount
+     * @return void
+     */
+    public function getPublicStatus(Event $event, int $guestCount)
+    {
+        //公開状況を初期化（非公開）
+        $publicStatus = FALSE;
+        
+        //回答期限日時
+        $limitDateTime = Carbon::parse($event->date)->subDay()->setTime(23, 59, 59);
+        
+        //「公開フラグが0でない+定員オーバーでない+回答期限より前」または「公開フラグが2」であれば、公開
+        if ((($event->is_public !== 0) && ($guestCount < $event->capacity) && ($limitDateTime >= now())) || ($event->is_public === 2)) {
+            $publicStatus = TRUE;
+        }
+        
+        return $publicStatus;
     }
 }
