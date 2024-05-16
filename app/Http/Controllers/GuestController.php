@@ -44,15 +44,17 @@ class GuestController extends Controller
     public function create(Request $request)
     {
         //idパラメータを取得
-        $id = $request->input('id');
+        $id = ($request->input('id')) ?? '';
         
-        //idパラメータが取得できなければ404
-        if (!$id) {
-            abort(404);
-        }
-
         //idをデコード
         $hashids = new Hashids('', 8);
+        $decodeIds = $hashids->decode($id);
+        
+        //idが取得できなければ404
+        if (!$decodeIds) {
+            abort(404);
+        }
+        
         $decodeId = $hashids->decode($id)[0];
 
         //交流会情報を取得

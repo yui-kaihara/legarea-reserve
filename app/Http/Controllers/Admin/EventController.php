@@ -37,7 +37,7 @@ class EventController extends Controller
         //交流会一覧を取得
         $events = $this->eventService->getList();
         
-        //ハッシュ後の文字数指定  
+        //ハッシュ後の文字数指定 
         $hashids = new Hashids('', 8);
         
         foreach ($events as $event) {
@@ -102,7 +102,19 @@ class EventController extends Controller
     public function update(EventFormRequest $request, int $id)
     {
         $this->eventService->update($request->all(), $id);
-        return redirect(route('admin.events.index'))->with('flash_message', '更新が完了しました。');
+        
+        //フラッシュメッセージを初期化（公開フラグの変更）
+        $message = '';
+    
+        //前ページのURLを取得
+        $previousUrl = url()->previous();
+        
+        //編集画面で更新した場合
+        if ($previousUrl !== route('admin.events.index')) {
+            $message = '更新が完了しました';
+        }
+
+        return redirect(route('admin.events.index'))->with('flash_message', $message);
     }
 
     /**
