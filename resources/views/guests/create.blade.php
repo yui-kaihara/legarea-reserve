@@ -3,7 +3,7 @@
 
 @if ($event)
 
-    <div class="mx-3 md:mx-auto mt-5 w-auto md:w-3/5 xl:w-2/5 h-24 md:h-28 lg:h-36 bg-cover rounded-lg" style="background-image: url({{ url('images/form-header.jpg') }})"></div>
+    <div class="mx-3 md:mx-auto mt-5 w-auto md:w-3/5 xl:w-2/5 h-24 md:h-28 lg:h-36 bg-center bg-cover rounded-lg" style="background-image: url({{ url('images/form-header.jpg') }})"></div>
     <div class="text-center">
         <dl class="inline-block w-auto md:w-3/5 xl:w-2/5 mt-5 mx-3 md:mx-0 py-6 px-4 md:px-8 bg-white border border-gray-200 rounded-lg shadow text-left text-sm">
             <div class="flex items-baseline md:items-center">
