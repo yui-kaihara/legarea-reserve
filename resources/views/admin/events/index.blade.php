@@ -82,7 +82,7 @@ if ($event->publicFlag) {
 @endforeach
             </tbody>
         </table>
-        {{ $events->links('vendor.pagination.tailwind1') }}
+        {{ $events->links('vendor.pagination.tailwind-custom') }}
     </div>
     
 @else

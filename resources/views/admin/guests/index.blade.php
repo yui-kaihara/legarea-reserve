@@ -97,7 +97,7 @@ if ($event == $time) {
 @endforeach
             </tbody>
         </table>
-        {{ $guests->links('vendor.pagination.tailwind1') }}
+        {{ $guests->links('vendor.pagination.tailwind-custom') }}
 @else
 
         <p class="mt-10 text-center">現在予約はありません。</p>

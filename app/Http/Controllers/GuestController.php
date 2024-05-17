@@ -44,7 +44,7 @@ class GuestController extends Controller
     public function create(Request $request)
     {
         //idパラメータを取得
-        $id = ($request->input('id')) ?? '';
+        $id = $request->input('id', '');
         
         //idをデコード
         $hashids = new Hashids('', 8);

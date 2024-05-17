@@ -57,19 +57,17 @@ class GuestController extends Controller
         $status = $request->input('status');
         
         //eventパラメータを取得
-        $event = $request->input('event');
+        $event = $request->input('event', Event::max('times'));
 
         //交流会IDを取得
-        $event = ($event) ?? Event::max('times');
         $eventId = $this->eventService->getDetail((int)$event)->id;
 
         //ゲスト一覧を取得
         $results = $this->guestService->getList($eventId, $status);
         
         //交流会の開催回一覧を取得
-        $events = $this->eventService->getList();
-        $times = $events->pluck('times');
-        
+        $times = $this->eventService->getList(0)->pluck('times');
+
         //ビューに渡す
         return view('admin.guests.index', ['guests' => $results[0], 'statusText' => $results[1], 'times' => $times]);
     }
@@ -82,8 +80,7 @@ class GuestController extends Controller
     public function create()
     {
         //交流会の開催回一覧を取得
-        $events = $this->eventService->getList();
-        $times = $events->pluck('times');
+        $times = $this->eventService->getList(0)->pluck('times');
 
         //ビューに渡す
         return view('admin.guests.create', ['times' => $times]);
@@ -195,7 +192,7 @@ class GuestController extends Controller
     public function download(Request $request)
     {
         //パラメータを取得
-        $times = ($request->input('event')) ?? Event::max('times');
+        $times = $request->input('event', Event::max('times'));
         $status = $request->input('status');
         
         //交流会IDを取得
