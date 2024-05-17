@@ -57,10 +57,9 @@ class GuestController extends Controller
         $status = $request->input('status');
         
         //eventパラメータを取得
-        $event = $request->input('event');
+        $event = $request->input('event', Event::max('times'));
 
         //交流会IDを取得
-        $event = ($event) ?? Event::max('times');
         $eventId = $this->eventService->getDetail((int)$event)->id;
 
         //ゲスト一覧を取得
@@ -195,7 +194,7 @@ class GuestController extends Controller
     public function download(Request $request)
     {
         //パラメータを取得
-        $times = ($request->input('event')) ?? Event::max('times');
+        $times = $request->input('event', Event::max('times'));
         $status = $request->input('status');
         
         //交流会IDを取得
