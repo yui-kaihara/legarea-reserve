@@ -65,12 +65,11 @@ class GuestController extends Controller
         //ゲスト一覧を取得
         $results = $this->guestService->getList($eventId, $status);
         
-        //交流会の開催回一覧を取得
-        $events = $this->eventService->getList();
-        $times = $events->pluck('times');
-        
+        //交流会のid配列を取得
+        $eventIds = $this->eventService->getList(0)->pluck('times');
+
         //ビューに渡す
-        return view('admin.guests.index', ['guests' => $results[0], 'statusText' => $results[1], 'times' => $times]);
+        return view('admin.guests.index', ['guests' => $results[0], 'statusText' => $results[1], 'times' => $eventIds]);
     }
 
     /**
@@ -81,11 +80,10 @@ class GuestController extends Controller
     public function create()
     {
         //交流会の開催回一覧を取得
-        $events = $this->eventService->getList();
-        $times = $events->pluck('times');
+        $eventIds = $this->eventService->getList(0)->pluck('times');
 
         //ビューに渡す
-        return view('admin.guests.create', ['times' => $times]);
+        return view('admin.guests.create', ['times' => $eventIds]);
     }
 
     /**

@@ -11,12 +11,21 @@ class EventService
     /**
      * 一覧表示
      * 
+     * @param int $page
      * @return Event
      */
-    public function getList()
+    public function getList(int $page = 10)
     {
-        //開催回の降順に10件ずつ取得
-        $events = Event::orderby('times', 'desc')->paginate(10);
+        //開催回の降順
+        $query = Event::orderby('times', 'desc');
+        
+        //件数の指定がある場合
+        if ($page > 0) {
+            $events = $query->paginate(10);
+            return $events;
+        }
+        
+        $events = $query->get();
         return $events;
     }
     
