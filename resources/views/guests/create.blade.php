@@ -39,7 +39,8 @@
 
 @section('checkbox')
     <div class="mt-8">
-        <div class="flex gap-2 md:gap-3">
+        <span class="px-1 py-0.5 bg-red-500 rounded-sm text-white text-xs font-normal">必須</span>
+        <div class="flex gap-2 md:gap-3 mt-1">
 @php
 $checked = (old('agreeCheck')) ? ' checked="checked"' : '';
 @endphp
