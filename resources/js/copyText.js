@@ -11,7 +11,7 @@ window.addEventListener('DOMContentLoaded', function () {
             var protocol = window.location.protocol;
             var hostname = window.location.hostname;
             var hashId = this.dataset.hashId;
-            var copyText = protocol + '//' + hostname + '?id=' + hashId;
+            var copyText = protocol + '//' + hostname + '/form?id=' + hashId;
             
             //テキストをクリップボードにコピーする
             navigator.clipboard.writeText(copyText);

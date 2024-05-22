@@ -1,1 +1,0 @@
-window.addEventListener("DOMContentLoaded",function(){for(var a=document.getElementsByClassName("is-copyText"),t=0;t<a.length;t++)a[t].addEventListener("click",function(){var e=window.location.protocol,o=window.location.hostname,n=this.dataset.hashId,r=e+"//"+o+"?id="+n;navigator.clipboard.writeText(r);var i="第"+this.dataset.times+"回";return alert(i+"申込フォームのURLをコピーしました。"),!1})});
