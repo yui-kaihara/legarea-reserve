@@ -150,8 +150,7 @@ class BlastmailService
         //登録データ
         $registDatas = [
             'access_token' => $accessToken,
-            'c2' => $requests['company_name'],
-            'c0' => '担当者',
+            'c0' => $requests['company_name'].'　ご担当者',
             'c15' => $requests['stream_email']
         ];
         

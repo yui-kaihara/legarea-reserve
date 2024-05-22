@@ -1,5 +1,6 @@
 <x-app-layout>
-    <x-slot name="header">株式会社LEGAREA 第{{ $times }}回交流会 申込フォーム</x-slot>
+    <x-slot name="title">第{{ $times }}回SES交流会 申込フォーム｜株式会社LEGAREA</x-slot>
+    <x-slot name="header">株式会社LEGAREA 第{{ $times }}回SES交流会 申込フォーム</x-slot>
 
 @if ($event)
 
@@ -64,8 +65,14 @@ $checked = (old('agreeCheck')) ? ' checked="checked"' : '';
     <div class="text-center">
         <div class="inline-block w-auto lg:w-2/5 mt-5 mx-3 md:mx-0 py-6 px-4 md:px-8 bg-white border border-gray-200 rounded-lg shadow text-left text-sm leading-6">
             <p class="mb-3 text-base md:text-lg font-semibold">株式会社LEGAREA 第{{ $times }}回交流会</p>
-            <p class="mb-3">「第{{ $times }}回交流会」の回答の受け付けは終了しました。<br />間違いであると思われる場合は、以下までお問い合わせください。</p>
-            <p>株式会社LEGAREA 営業担当<br />{{ config('contacts.name') }} （Tel：{{ config('contacts.tel') }}）</p>
+            <p class="mb-3">
+                「第{{ $times }}回交流会」の回答の受け付けは終了しました。<br />
+                間違いであると思われる場合は、以下までお問い合わせください。
+            </p>
+            <p>
+                株式会社LEGAREA 営業担当<br />
+                {{ config('contacts.name') }} （Tel：{{ config('contacts.tel') }}）
+            </p>
         </div>
     </div>
 
