@@ -30,7 +30,7 @@ class SendMailFailure extends Mailable
     {
         return new Envelope(
             subject: '申込み受付不可のご連絡/LEGAREA第'.$this->guest->times.'回交流会',
-            from: 'foo@example.net',
+            from: env('MAIL_FROM_ADDRESS'),
             to: $this->guest->email
         );
     }

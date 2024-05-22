@@ -30,7 +30,7 @@ class SendMail extends Mailable
     {   
         return new Envelope(
             subject: '申込み完了通知/LEGAREA第'.$this->guest->times.'回交流会',
-            from: 'foo@example.net',
+            from: env('MAIL_FROM_ADDRESS'),
             to: $this->guest->email
         );
     }
