@@ -8,7 +8,7 @@ if ($guest) {
 }
 @endphp
 <x-app-layout>
-    <x-slot name="title">第{{ $times }}回SES交流会 申込完了｜株式会社LEGAREA</x-slot>
+    <x-slot name="title">{{ $times }}SES交流会 申込完了｜株式会社LEGAREA</x-slot>
     <x-slot name="header">株式会社LEGAREA {{ $times }}SES交流会 申込完了</x-slot>
     <div class="text-center">
         <div class="inline-block w-auto lg:w-2/5 mt-5 mx-3 md:mx-0 py-6 px-4 md:px-8 bg-white border border-gray-200 rounded-lg shadow text-left text-sm leading-6">
