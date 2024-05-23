@@ -15,7 +15,7 @@
 
 @if ($events->total() > 0)
 
-    <div class="w-11/12 lg:w-2/3 mx-auto py-10">
+    <div class="w-11/12 lg:w-3/4 mx-auto py-10">
         <table class="block overflow-x-scroll md:overflow-x-auto text-center">
             <thead>
                 <tr class="bg-gray-200 text-xs font-medium text-gray-500">
@@ -37,7 +37,7 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ $event->date->format('Y-n-d') }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ $event->start_time->format('H:i') }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ $event->end_time->format('H:i') }}</td>
-                    <td class="px-6 py-4 text-sm text-gray-800">{{ $event->place }}</td>
+                    <td class="px-6 py-4 text-sm text-gray-800 text-left">{{ $event->place }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ $event->amount }}円</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ $event->capacity }}人</td>
                     <td class="px-6 py-4 whitespace-nowrap">
@@ -64,7 +64,7 @@ if ($event->publicFlag) {
                         </form>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center text-xs">
+                        <div class="flex items-center gap-0.5 text-xs">
                             <a href="javascript:void(0)" data-hash-id="{{ $event->hashId }}" data-times="{{ $event->times }}" class="bg-white hover:bg-gray-100 text-gray-500 font-semibold py-2 px-2 border border-gray-400 rounded shadow is-copyText">
                                 URL
                             </a>

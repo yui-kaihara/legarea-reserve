@@ -81,7 +81,7 @@ if ($event == $time) {
                     <td class="px-6 py-4 break-all text-sm text-gray-800">{{ $guest->stream_email }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ ($guest->company->count > 1) ? '' : '○'; }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center text-xs">
+                        <div class="flex items-center gap-0.5 text-xs">
                             <a href="{{ route('admin.guests.edit', [$guest->id]) }}" class="bg-white hover:bg-gray-100 text-gray-500 font-semibold py-2 px-2 border border-gray-400 rounded shadow">
                                 編集
                             </a>
