@@ -30,7 +30,11 @@ class BlastmailService
         $token = json_decode($response, true);
 
         //アクセストークンを返却
-        return $token['accessToken'];
+        if (isset($token['accessToken'])) {
+            return $token['accessToken'];
+        }
+        
+        return false;
     }
     
     /**
@@ -64,26 +68,29 @@ class BlastmailService
         //ログイン処理
         $accessToken = $this->login();
         
-        //ユーザ検索
-        $users = $this->search($requests, $accessToken);
-
-        //ユーザが存在するか
-        if ($users) {
+        if ($accessToken) {
             
-            if ($updateFlag) {
+            //ユーザ検索
+            $users = $this->search($requests, $accessToken);
+    
+            //ユーザが存在するか
+            if ($users) {
                 
-                //更新
-                $this->update($requests, $accessToken, $users);   
+                if ($updateFlag) {
+                    
+                    //更新
+                    $this->update($requests, $accessToken, $users);   
+                }
+    
+            } else {
+    
+                //登録
+                $this->store($requests, $accessToken);
             }
-
-        } else {
-
-            //登録
-            $this->store($requests, $accessToken);
+            
+            //ログアウト処理
+            $this->logout($accessToken);
         }
-        
-        //ログアウト処理
-        $this->logout($accessToken);
     }    
     
     /**
