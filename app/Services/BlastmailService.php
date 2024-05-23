@@ -28,7 +28,7 @@ class BlastmailService
         
         //レスポンスをjsonから配列に変換
         $token = json_decode($response, true);
-dd($token);
+
         //アクセストークンを返却
         if (isset($token['accessToken'])) {
             return $token['accessToken'];
