@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Rules\ExcludeMailDomain;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ContactFormRequest extends FormRequest
@@ -26,7 +27,7 @@ class ContactFormRequest extends FormRequest
             'name' => 'required',
             'name_kana' => 'required',
             'age' => 'required|integer',
-            'email' => 'required|email',
+            'email' => ['required', 'email', new ExcludeMailDomain],
             'email_stream' => 'nullable|email',
             'company_name' => 'required',
             'times' => 'required|integer',
@@ -45,7 +46,7 @@ class ContactFormRequest extends FormRequest
         return [
             'required' => ':attributeは必須です',
             'integer' => ':attributeは数値で入力してください',
-            'email' => ':attributeの形式で入力してください'
+            'email.email' => ':attributeの形式で入力してください'
         ];
     }
     
