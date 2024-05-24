@@ -4,6 +4,10 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta property="og:title" content="SES交流会申込アプリ {{ config('app.name') }}｜株式会社LEGAREA">
+        <meta property="og:description" content="SES交流会の申し込みが簡単にできるアプリです。イベント情報の確認から参加登録まで、シンプルで使いやすいインターフェースを提供します。今すぐ登録して、業界の最新情報をキャッチアップしましょう！">
+        <meta property="og:image" content="{{ url('images/og-image.jpg') }}">
+        <meta property="og:site_name" content="{{ config('app.name') }}">
 
 @if (isset($title))
         <title>{{ $title }}</title>
