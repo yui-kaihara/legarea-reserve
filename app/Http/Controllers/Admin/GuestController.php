@@ -180,7 +180,7 @@ class GuestController extends Controller
         $this->contactService->destroy($eventId, $id);
         
         //一覧画面にリダイレクト
-        return redirect(route('admin.guests.index'))->with(['flash_message' => 'キャンセルが完了しました。', 'messageColor' => 'blue']);
+        return redirect(route('admin.guests.index'))->with(['flash_message' => '削除が完了しました。', 'messageColor' => 'blue']);
     }
     
     /**
