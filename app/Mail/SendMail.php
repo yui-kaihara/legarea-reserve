@@ -29,7 +29,7 @@ class SendMail extends Mailable
     public function envelope(): Envelope
     {   
         return new Envelope(
-            subject: '申込み完了通知/LEGAREA第'.$this->guest->times.'回交流会',
+            subject: '申込み完了通知/LEGAREA第'.$this->guest->times.'回SES交流会',
             from: env('MAIL_FROM_ADDRESS'),
             to: $this->guest->email
         );
