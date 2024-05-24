@@ -184,7 +184,7 @@ class BlastmailService
             $updateDatas = [
                 'access_token' => $accessToken,
                 'contactID' => $user['contactID'],
-                'c2' => $requests['company_name'] //更新する項目は会社名のみ
+                'c0' => $requests['company_name'].'　ご担当者' //更新するのは会社名部分のみ
             ];
             
             //ユーザごとにAPI経由で更新処理実行

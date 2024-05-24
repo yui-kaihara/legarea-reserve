@@ -7,13 +7,13 @@ LEGAREA事務局です。
 下記内容にて申込みをお受付いたしました。
 
 氏名：{{ $guest->name }}様
-開催：{{ $guest->event[0]->date->isoFormat('Y年M月D日(ddd)') }}　
-会場：{{ $guest->event[0]->place }}
+開催：{{ $guest->event->last()->date->isoFormat('Y年M月D日(ddd)') }}　
+会場：{{ $guest->event->last()->place }}
 
-受付：{{ $guest->event[0]->start_time->format('H:i') }}~※受け付け順に交流開始
-終了：~{{ $guest->event[0]->end_time->format('H:i') }}
-金額：{{ ($guest->company->count > 1) ? $guest->event[0]->amount.'円/1人': '無料' }}
-定員：{{ $guest->event[0]->capacity }}名(1社につき2名まで)
+受付：{{ $guest->event->last()->start_time->format('H:i') }}~※受け付け順に交流開始
+終了：~{{ $guest->event->last()->end_time->format('H:i') }}
+金額：{{ ($guest->company->count > 1) ? $guest->event->last()->amount.'円/1人': '無料' }}
+定員：{{ $guest->event->last()->capacity }}名(1社につき2名まで)
 
 ※SES交流会となりますので、関係のない営業を発見した場合は退場していただきます。
 　また無理な営業なども同じように対応させていただきますので、あらかじめご了承ください。
