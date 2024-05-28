@@ -65,11 +65,20 @@ class GuestController extends Controller
         //ゲスト一覧を取得
         $results = $this->guestService->getList($eventId, $status);
         
+        //ブラストメールの登録一覧を取得
+        $streamList = $this->blastmailService->getList();
+        
+        //配信登録フラグを設定
+        $guests = $results[0];
+        foreach ($guests as $guest) {
+            $guest->is_stream = in_array($guest->stream_email, $streamList);
+        }
+        
         //交流会の開催回一覧を取得
         $times = $this->eventService->getList(0)->pluck('times');
 
         //ビューに渡す
-        return view('admin.guests.index', ['guests' => $results[0], 'statusText' => $results[1], 'times' => $times]);
+        return view('admin.guests.index', ['guests' => $guests, 'statusText' => $results[1], 'times' => $times]);
     }
 
     /**

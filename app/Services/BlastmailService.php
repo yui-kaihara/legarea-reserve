@@ -3,8 +3,66 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Storage;
+
 class BlastmailService
 {
+    /**
+     * 一覧取得
+     * 
+     * @return array
+     */
+    public function getList()
+    {
+        //ログイン処理
+        $accessToken = $this->login();
+        
+        //配信メール一覧を初期化
+        $streamList = [];
+        
+        if ($accessToken) {
+            
+            //読者一覧取得URL
+            $url = 'https://api.bme.jp/rest/1.0/contact/list/export?';
+
+            //エンコードされたクエリ文字列を生成
+            $query = ['access_token' => $accessToken];
+            $encodeQuery = http_build_query($query);
+        
+            //一覧取得を実行
+            $response = file_get_contents($url.$encodeQuery);
+            
+            //CSVファイルを保存
+            $tempPath = storage_path('app/blastmail.csv');
+            Storage::put('blastmail.csv', $response);
+            
+            //CSV情報の取得
+            $csvDatas = new \SplFileObject($tempPath);
+
+            $csvDatas->setFlags(
+              \SplFileObject::READ_CSV |    // CSVとして行を読み込み
+              \SplFileObject::READ_AHEAD |  // 先読み／巻き戻しで読み込み
+              \SplFileObject::SKIP_EMPTY |  // 空行を読み飛ばす
+              \SplFileObject::DROP_NEW_LINE // 行末の改行を読み飛ばす
+            );        
+    
+            //配列に変換
+            foreach($csvDatas as $index => $csvData) {
+    
+                //項目行を省く        
+                if ($index === 0) {
+                    continue;
+                }
+                $streamList[] = $csvData[3];
+            }
+            
+            //ログアウト処理
+            $this->logout($accessToken);
+        }
+        
+        return $streamList;
+    }
+
     /**
      * ログイン
      * 
