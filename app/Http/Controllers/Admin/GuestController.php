@@ -67,19 +67,22 @@ class GuestController extends Controller
         $results = $this->guestService->getList($eventId, $status);
         $guests = $results[0];
         
+        //ブラストメールの登録一覧のキャッシュを取得
+        $streamList = Cache::get('streamList');
+        
         //キャッシュが存在しない場合
-        if (!Cache::get('streamList')) {
+        if (!$streamList) {
 
             //ブラストメールの登録一覧を取得
             $streamList = $this->blastmailService->getList();
             
-            //配信登録フラグを設定
-            foreach ($guests as $guest) {
-                $guest->is_stream = in_array($guest->stream_email, $streamList);
-            }
-            
             //ブラストメールの登録一覧をキャッシュ保存（1時間）
             Cache::put('streamList', $streamList, 3600);
+        }
+        
+        //配信登録フラグを設定
+        foreach ($guests as $guest) {
+            $guest->is_stream = in_array($guest->stream_email, $streamList);
         }
 
         //交流会の開催回一覧を取得
