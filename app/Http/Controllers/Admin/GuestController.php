@@ -15,6 +15,7 @@ use App\Services\EventService;
 use App\Services\FileOperateService;
 use App\Services\GuestService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class GuestController extends Controller
 {
@@ -64,16 +65,23 @@ class GuestController extends Controller
 
         //ゲスト一覧を取得
         $results = $this->guestService->getList($eventId, $status);
-        
-        //ブラストメールの登録一覧を取得
-        $streamList = $this->blastmailService->getList();
-        
-        //配信登録フラグを設定
         $guests = $results[0];
-        foreach ($guests as $guest) {
-            $guest->is_stream = in_array($guest->stream_email, $streamList);
-        }
         
+        //キャッシュが存在しない場合
+        if (!Cache::get('streamList')) {
+
+            //ブラストメールの登録一覧を取得
+            $streamList = $this->blastmailService->getList();
+            
+            //配信登録フラグを設定
+            foreach ($guests as $guest) {
+                $guest->is_stream = in_array($guest->stream_email, $streamList);
+            }
+            
+            //ブラストメールの登録一覧をキャッシュ保存（1時間）
+            Cache::put('streamList', $streamList, 3600);
+        }
+
         //交流会の開催回一覧を取得
         $times = $this->eventService->getList(0)->pluck('times');
 
