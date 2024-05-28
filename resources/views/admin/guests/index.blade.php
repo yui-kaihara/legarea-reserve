@@ -13,7 +13,7 @@
     </p>
 @endif
 
-    <div class="w-11/12 lg:w-5/6 mx-auto py-10">
+    <div class="w-11/12 lg:w-5/6 mx-auto pt-10 pb-20">
         <form action="{{ route('admin.guests.download', ['event' => request()->input('event'), 'status' => request()->input('status')]) }}" method="POST" class="mb-2 text-right">
             @csrf
             <button class="cursor-pointer w-32 lg:w-44 py-2 lg:px-2 text-xs lg:text-sm font-semibold rounded-lg border border-transparent bg-blue-100 text-blue-800 hover:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none">ダウンロード</button>
@@ -32,7 +32,7 @@
             <form action="javascript:void(0)">
                 @csrf
                 第
-                <select name="times" class="w-16 mt-2 px-4 border-gray-200 rounded-lg cursor-point is-submit">
+                <select name="times" class="w-16 mt-2 px-4 border-gray-200 rounded-lg cursor-pointer is-submit">
 
 @foreach ($times as $time)
 @php
@@ -67,6 +67,7 @@ if ($event == $time) {
                     <th scope="col" class="min-w-32 w-1/6 py-3">メールアドレス</th>
                     <th scope="col" class="min-w-32 w-1/6 py-3">配信用メールアドレス</th>
                     <th scope="col" class="w-1/12 py-3">新規</th>
+                    <th scope="col" class="w-1/12 py-3">配信</th>
                     <th scope="col" class="w-1/12 py-3"></th>
                 </tr>
             </thead>
@@ -80,6 +81,7 @@ if ($event == $time) {
                     <td class="px-6 py-4 break-all text-sm text-gray-800">{{ $guest->email }}</td>
                     <td class="px-6 py-4 break-all text-sm text-gray-800">{{ $guest->stream_email }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ ($guest->company->count > 1) ? '' : '○'; }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ ($guest->is_stream) ? '○' : ''; }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex items-center gap-0.5 text-xs">
                             <a href="{{ route('admin.guests.edit', [$guest->id]) }}" class="bg-white hover:bg-gray-100 text-gray-500 font-semibold py-2 px-2 border border-gray-400 rounded shadow">
