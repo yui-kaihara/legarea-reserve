@@ -22,29 +22,39 @@ class FileOperateService
         $spreadsheet = new Spreadsheet();
         
         //全体のフォント設定
-        $spreadsheet->getDefaultStyle()->getFont()->setName('游ゴシック');
+        $spreadsheet->getDefaultStyle()->getFont()->setName('MS Pゴシック');
         
         //処理したいシートを取得
         $sheet = $spreadsheet->getActiveSheet();
         
         
         //書き込みデータを準備
-        $writeDatas = [['会社名', '名前', 'ふりがな', '年齢', 'メールアドレス', '配信用メールアドレス']];
-        
+        $writeDatas = [['会社名', '名前', 'ふりがな', '年齢', 'メールアドレス', '配信用メールアドレス', '新規', '配信']];
+
         foreach ($guests as $guest) {
+            
+            //新規
+            $newFlag = ($guest->company->count > 1) ? '' : '○';
+            
+            //配信
+            $streamFlag = ($guest->is_stream) ? '○' : '';
+
+            //データを追加
             $writeDatas[] = [
                 $guest->company->company_name,
                 $guest->name,
                 $guest->name_kana,
                 $guest->age,
                 $guest->email,
-                $guest->stream_email
+                $guest->stream_email,
+                $newFlag,
+                $streamFlag
             ];
         }
 
         $sheet->fromArray($writeDatas, null, 'A1');
         
-        for ($i = 'A'; $i != 'G'; $i++) {
+        for ($i = 'A'; $i != 'I'; $i++) {
             
             //セル幅自動調整
             $sheet->getColumnDimension($i)->setAutoSize(true);

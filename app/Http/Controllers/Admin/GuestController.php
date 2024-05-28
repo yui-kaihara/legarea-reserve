@@ -15,6 +15,7 @@ use App\Services\EventService;
 use App\Services\FileOperateService;
 use App\Services\GuestService;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
 
 class GuestController extends Controller
@@ -67,23 +68,8 @@ class GuestController extends Controller
         $results = $this->guestService->getList($eventId, $status);
         $guests = $results[0];
         
-        //ブラストメールの登録一覧のキャッシュを取得
-        $streamList = Cache::get('streamList');
-        
-        //キャッシュが存在しない場合
-        if (!$streamList) {
-
-            //ブラストメールの登録一覧を取得
-            $streamList = $this->blastmailService->getList();
-            
-            //ブラストメールの登録一覧をキャッシュ保存（1時間）
-            Cache::put('streamList', $streamList, 3600);
-        }
-        
         //配信登録フラグを設定
-        foreach ($guests as $guest) {
-            $guest->is_stream = in_array($guest->stream_email, $streamList);
-        }
+        $guests = $this->setIsStream($guests);
 
         //交流会の開催回一覧を取得
         $times = $this->eventService->getList(0)->pluck('times');
@@ -207,7 +193,7 @@ class GuestController extends Controller
      * ダウンロード
      * 
      * @param Request $request
-     * @param void
+     * @return void
      */
     public function download(Request $request)
     {
@@ -224,19 +210,21 @@ class GuestController extends Controller
         //ゲスト一覧
         $guests = $results[0]->all();
 
+        //配信登録フラグを設定
+        $guests = $this->setIsStream($guests);
+
         //追加ファイル名
         $addFileName = $results[1];
 
         //Excelダウンロード
         $this->fileOperateService->download($guests, (int)$times, $addFileName);
-
     }
     
     /**
      * インポート
      * 
      * @param ImportFileFormRequest $request
-     * @param void
+     * @return Illuminate\View\View
      */
     public function import(ImportFileFormRequest $request)
     {
@@ -264,5 +252,34 @@ class GuestController extends Controller
         
         //一覧画面にリダイレクト
         return redirect(route('admin.guests.index'))->with(['flash_message' => 'インポートが完了しました。', 'messageColor' => 'blue']);
+    }
+    
+    /**
+     * 配信登録フラグ設定
+     * 
+     * @param array|LengthAwarePaginator $guests
+     * @return array|LengthAwarePaginator
+     */
+    public function setIsStream(array|LengthAwarePaginator $guests)
+    {
+        //ブラストメールの登録一覧のキャッシュを取得
+        $streamList = Cache::get('streamList');
+        
+        //キャッシュが存在しない場合
+        if (!$streamList) {
+
+            //ブラストメールの登録一覧を取得
+            $streamList = $this->blastmailService->getList();
+            
+            //ブラストメールの登録一覧をキャッシュ保存（1時間）
+            Cache::put('streamList', $streamList, 3600);
+        }
+        
+        //配信登録フラグを設定
+        foreach ($guests as $guest) {
+            $guest->is_stream = in_array($guest->stream_email, $streamList);
+        }
+        
+        return $guests;
     }
 }
