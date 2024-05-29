@@ -147,12 +147,16 @@ class GuestController extends Controller
         //会社更新処理
         $this->companyService->update(['company_name' => $requests['company_name']], $guest->company->id);
 
-        //ブラストメールへの反映をAPI経由で実行
-        $newStreamFlag = $this->blastmailService->reflect($requests);
-        
-        //新規の配信用メールアドレスが入力された場合
-        if ($newStreamFlag) {
-            $requests['is_newStream'] = $newStreamFlag;
+        //配信用メールアドレスの入力がある場合
+        if ($requests['stream_email']) {
+
+            //ブラストメールへの反映をAPI経由で実行
+            $newStreamFlag = $this->blastmailService->reflect($requests, TRUE);
+            
+            //新規の配信用メールアドレスが入力された場合
+            if ($newStreamFlag) {
+                $requests['is_newStream'] = $newStreamFlag;
+            }
         }
 
         //リクエストデータから会社名を除外

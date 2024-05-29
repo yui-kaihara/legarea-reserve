@@ -27,8 +27,17 @@ class EventGuestService
      */
     public function store(array $requests)
     {
-        $eventGuest = new EventGuest();
-        $eventGuest->fill($requests)->save();
+        //既に登録済みではないか確認
+        $eventGuests = EventGuest::where([
+            'event_id' => $requests['event_id'],
+            'guest_id' => $requests['guest_id'],
+            'company_id' => $requests['company_id']
+        ])->get();
+
+        if ($eventGuests->isEmpty()) {
+            $eventGuest = new EventGuest();
+            $eventGuest->fill($requests)->save();
+        }
     }
     
     /**
