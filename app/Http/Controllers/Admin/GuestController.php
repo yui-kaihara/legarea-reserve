@@ -15,8 +15,6 @@ use App\Services\EventService;
 use App\Services\FileOperateService;
 use App\Services\GuestService;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Cache;
 
 class GuestController extends Controller
 {
@@ -66,16 +64,12 @@ class GuestController extends Controller
 
         //ゲスト一覧を取得
         $results = $this->guestService->getList($eventId, $status);
-        $guests = $results[0];
-        
-        //配信登録フラグを設定
-        $guests = $this->setIsStream($guests);
 
         //交流会の開催回一覧を取得
         $times = $this->eventService->getList(0)->pluck('times');
 
         //ビューに渡す
-        return view('admin.guests.index', ['guests' => $guests, 'statusText' => $results[1], 'times' => $times]);
+        return view('admin.guests.index', ['guests' => $results[0], 'statusText' => $results[1], 'times' => $times]);
     }
 
     /**
@@ -102,16 +96,12 @@ class GuestController extends Controller
     {
         //リクエストデータを配列化
         $requests = $request->all();
+        
+        //新規配信フラグを設定
+        $requests = $this->guestService->setIsNewStream($requests);
 
         //登録処理
         $guest = $this->contactService->store($requests);
-        
-        //配信用メールアドレスの入力がある場合
-        if ($requests['stream_email']) {
-            
-            //ブラストメールへの反映をAPI経由で実行
-            $this->blastmailService->reflect($requests);
-        }
         
         //フラッシュメッセージ用に設定
         $flashMessage = '定員オーバーのため登録できませんでした。';
@@ -158,7 +148,12 @@ class GuestController extends Controller
         $this->companyService->update(['company_name' => $requests['company_name']], $guest->company->id);
 
         //ブラストメールへの反映をAPI経由で実行
-        $this->blastmailService->reflect($requests);
+        $newStreamFlag = $this->blastmailService->reflect($requests);
+        
+        //新規の配信用メールアドレスが入力された場合
+        if ($newStreamFlag) {
+            $requests['is_newStream'] = $newStreamFlag;
+        }
 
         //リクエストデータから会社名を除外
         unset($requests['company_name']);
@@ -210,9 +205,6 @@ class GuestController extends Controller
         //ゲスト一覧
         $guests = $results[0]->all();
 
-        //配信登録フラグを設定
-        $guests = $this->setIsStream($guests);
-
         //追加ファイル名
         $addFileName = $results[1];
 
@@ -239,47 +231,14 @@ class GuestController extends Controller
 
         foreach ($insertDatas as $insertData) {
             
+            //新規配信フラグを設定
+            $insertData = $this->guestService->setIsNewStream($insertData);
+            
             //登録処理
             $this->contactService->store($insertData);
-            
-            //配信用メールアドレスの入力がある場合
-            if ($insertData['stream_email']) {
-                
-                //ブラストメールへの反映をAPI経由で実行
-                $this->blastmailService->reflect($insertData);
-            }
         }
         
         //一覧画面にリダイレクト
         return redirect(route('admin.guests.index'))->with(['flash_message' => 'インポートが完了しました。', 'messageColor' => 'blue']);
-    }
-    
-    /**
-     * 配信登録フラグ設定
-     * 
-     * @param array|LengthAwarePaginator $guests
-     * @return array|LengthAwarePaginator
-     */
-    public function setIsStream(array|LengthAwarePaginator $guests)
-    {
-        //ブラストメールの登録一覧のキャッシュを取得
-        $streamList = Cache::get('streamList');
-        
-        //キャッシュが存在しない場合
-        if (!$streamList) {
-
-            //ブラストメールの登録一覧を取得
-            $streamList = $this->blastmailService->getList();
-            
-            //ブラストメールの登録一覧をキャッシュ保存（1時間）
-            Cache::put('streamList', $streamList, 3600);
-        }
-        
-        //配信登録フラグを設定
-        foreach ($guests as $guest) {
-            $guest->is_stream = in_array($guest->stream_email, $streamList);
-        }
-        
-        return $guests;
     }
 }

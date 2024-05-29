@@ -36,7 +36,7 @@ class Guest extends Model
      *
      * @array
      */
-    protected $fillable = ['company_name', 'name', 'name_kana', 'age', 'email', 'stream_email', 'company_id'];
+    protected $fillable = ['company_name', 'name', 'name_kana', 'age', 'email', 'stream_email', 'company_id', 'is_newStream'];
     
     /*
      * ゲストが所属する会社を取得

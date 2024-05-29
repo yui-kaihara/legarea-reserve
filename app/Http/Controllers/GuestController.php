@@ -8,6 +8,7 @@ use App\Models\Event;
 use App\Services\BlastmailService;
 use App\Services\ContactService;
 use App\Services\EventService;
+use App\Services\GuestService;
 use App\Services\SendMailService;
 use Illuminate\Http\Request;
 use Hashids\Hashids;
@@ -20,18 +21,21 @@ class GuestController extends Controller
      * @param BlastmailService $blastmailService
      * @param ContactService $contactService
      * @param EventService $eventService
+     * @param GuestService $guestService
      * @param SendMailService $sendMailService
      */
     public function __construct(
         BlastmailService $blastmailService,
         ContactService $contactService,
         EventService $eventService,
+        GuestService $guestService,
         SendMailService $sendMailService
     )
     {
         $this->blastmailService = $blastmailService;
         $this->contactService = $contactService;
         $this->eventService = $eventService;
+        $this->guestService = $guestService;
         $this->sendMailService = $sendMailService;
     }
 
@@ -88,6 +92,9 @@ class GuestController extends Controller
     {
         //リクエストデータを配列化
         $requests = $request->all();
+        
+        //新規配信フラグを設定
+        $requests = $this->guestService->setIsNewStream($requests);
 
         //登録処理
         $guest = $this->contactService->store($requests);
@@ -97,13 +104,6 @@ class GuestController extends Controller
         
         //メール送信処理
         $this->sendMailService->send($guest);
-        
-        //配信用メールアドレスの入力がある場合
-        if ($requests['stream_email']) {
-            
-            //ブラストメールへの反映をAPI経由で実行
-            $this->blastmailService->reflect($requests, FALSE);
-        }
         
         //新たにトークンを作成（多重送信防止）
         $request->session()->regenerateToken();
