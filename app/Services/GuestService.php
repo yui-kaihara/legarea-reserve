@@ -11,6 +11,40 @@ use Illuminate\Pagination\LengthAwarePaginator;
 class GuestService
 {
     /**
+     * コンストラクタ
+     * 
+     * @param BlastmailService $blastmailService
+     */
+    public function __construct(BlastmailService $blastmailService)
+    {
+        $this->blastmailService = $blastmailService;
+    }
+
+    /**
+     * 新規配信フラグ設定
+     * 
+     * @param array $requests
+     * @return array
+     */
+    public function setIsNewStream(array $requests)
+    {
+        //新規配信フラグを初期化
+        $newStreamFlag = FALSE;
+        
+        //配信用メールアドレスの入力がある場合
+        if ($requests['stream_email']) {
+            
+            //ブラストメールへの反映をAPI経由で実行
+            $newStreamFlag = $this->blastmailService->reflect($requests);
+        }
+        
+        //新規配信フラグをリクエストに追加
+        $requests['is_newStream'] = $newStreamFlag;
+        
+        return $requests;
+    }
+
+    /**
      * 一覧取得
      * 
      * @param int $times

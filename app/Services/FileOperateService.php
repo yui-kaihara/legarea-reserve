@@ -37,7 +37,7 @@ class FileOperateService
             $newFlag = ($guest->company->count > 1) ? '' : '○';
             
             //配信
-            $streamFlag = ($guest->is_stream) ? '○' : '';
+            $streamFlag = ($guest->is_newStream) ? '○' : '';
 
             //データを追加
             $writeDatas[] = [
