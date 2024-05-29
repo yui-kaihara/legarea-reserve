@@ -55,8 +55,7 @@ class GuestService
     public function getList(int $eventId, string $status = null, int $page = 10)
     {
         //クエリ作成
-        $eventGuestIds = EventGuest::where('event_guests.event_id', $eventId)->pluck('guest_id');
-        $query = Guest::select('guests.*')->whereIn('guests.id', $eventGuestIds);
+        $query = Guest::select('guests.*');
 
         //statusテキストを設定
         $statusText = '';
@@ -79,15 +78,22 @@ class GuestService
                 $join->where('companies.count', $condition, 1);
             });
         }
+
+        //中間テーブルとJOIN
+        $query->join('event_guests', function($join) use ($eventId) {
+           $join->on('guests.id', '=', 'event_guests.guest_id');
+           $join->on('guests.company_id', '=', 'event_guests.company_id');
+           $join->where('event_guests.event_id', $eventId);
+        });
         
         //件数の指定が0の場合、全件を設定
         if ($page === 0) {
             $page = $query->count();
         }
 
-        //会社IDの昇順にソート、ページネーションを設定して取得
-        $guests = $query->orderby('company_id')->paginate($page)->withQueryString();
-        
+        //申込日時の降順にソート、ページネーションを設定して取得
+        $guests = $query->orderby('event_guests.created_at', 'DESC')->paginate($page)->withQueryString();
+
         //配列を返却（ゲストモデル、新規or2回目以降）
         return [$guests, $statusText]; 
     }

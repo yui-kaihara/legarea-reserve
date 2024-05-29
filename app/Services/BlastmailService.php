@@ -63,7 +63,7 @@ class BlastmailService
      * @param bool $updateFlag
      * @return bool
      */
-    public function reflect(array $requests, bool $updateFlag = TRUE)
+    public function reflect(array $requests, bool $updateFlag = FALSE)
     {
         //ログイン処理
         $accessToken = $this->login();
@@ -74,7 +74,7 @@ class BlastmailService
         if ($accessToken) {
             
             //ユーザ検索
-            $users = $this->search($requests, $accessToken);
+            $users = $this->search($requests, $accessToken, $updateFlag);
 
             //ユーザが存在するか
             if ($users) {
@@ -106,9 +106,10 @@ class BlastmailService
      * 
      * @param array $requests
      * @param string $accessToken
+     * @param string $updateFlag
      * @return array
      */
-    public function search(array $requests, string $accessToken)
+    public function search(array $requests, string $accessToken, bool $updateFlag)
     {
         //検索URL
         $url = 'https://api.bme.jp/rest/1.0/contact/list/search?';
@@ -129,11 +130,11 @@ class BlastmailService
         //レスポンスをjsonから配列に変換
         $users = json_decode($response, true)['contacts'];
 
-        //ユーザが存在する場合（=会社名の変更のみ）
-        if ($users) {
+        //ユーザが存在する且つ更新フラグがTRUEの場合（=会社名の変更のみ）
+        if ($users && $updateFlag) {
 
             //メールアドレスからドメイン部分を取得
-            $domain = substr(strrchr($requests['stream_email'], '@'), 1);
+            $domain = substr(strrchr($requests['email'], '@'), 1);
 
             //エンコードされたクエリ文字列を生成（同じドメインを検索）
             $query['keywords'] = $domain;
