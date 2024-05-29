@@ -61,7 +61,7 @@ class BlastmailService
      * 
      * @param array $requests
      * @param bool $updateFlag
-     * @return void
+     * @return bool
      */
     public function reflect(array $requests, bool $updateFlag = TRUE)
     {
