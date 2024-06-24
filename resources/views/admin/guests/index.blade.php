@@ -90,7 +90,7 @@ if ($event == $time) {
                             <form action="{{ route('admin.guests.destroy', [$guest->id]) }}" method="post">
                                 @csrf
                                 @method('DELETE')
-                                <input type="hidden" name="times" value="{{ $guest->event[0]->times }}" />
+                                <input type="hidden" name="times" value="{{ $event }}" />
                                 <input type="submit" value="削除" onclick="return confirm('本当に削除しますか？')" class="bg-white hover:bg-gray-100 text-gray-500 font-semibold py-2 px-2 border border-gray-400 rounded shadow cursor-pointer" />
                             </form>
                         </div>
