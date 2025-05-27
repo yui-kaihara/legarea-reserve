@@ -8,9 +8,9 @@ use App\Http\Requests\ContactFormRequest;
 use App\Http\Requests\ImportFileFormRequest;
 use App\Models\Event;
 use App\Models\Guest;
-use App\Services\BlastmailService;
 use App\Services\CompanyService;
 use App\Services\ContactService;
+use App\Services\EmailApiIntegrationService;
 use App\Services\EventService;
 use App\Services\FileOperateService;
 use App\Services\GuestService;
@@ -21,25 +21,25 @@ class GuestController extends Controller
     /**
      * コンストラクタ
      * 
-     * @param BlastmailService $blastmailService
      * @param CompanyService $companyService
      * @param ContactService $contactService
+     * @param EmailApiIntegrationService $emailApiIntegrationService
      * @param EventService $eventService
      * @param FileOperateService $fileOperateService
      * @param GuestService $guestService
      */
     public function __construct(
-        BlastmailService $blastmailService,
         CompanyService $companyService,
         ContactService $contactService,
+        EmailApiIntegrationService $emailApiIntegrationService,
         EventService $eventService,
         FileOperateService $fileOperateService,
         GuestService $guestService
     )
     {
-        $this->blastmailService = $blastmailService;
         $this->companyService = $companyService;
         $this->contactService = $contactService;
+        $this->emailApiIntegrationService = $emailApiIntegrationService;
         $this->eventService = $eventService;
         $this->fileOperateService = $fileOperateService;
         $this->guestService = $guestService;
@@ -148,7 +148,7 @@ class GuestController extends Controller
         $this->companyService->update(['company_name' => $requests['company_name']], $guest->company->id);
 
         //ブラストメールへの反映をAPI経由で実行
-        $newStreamFlag = $this->blastmailService->reflect($requests, TRUE);
+        $newStreamFlag = $this->emailApiIntegrationService->reflect($requests);
         
         //新規の配信用メールアドレスが入力された場合
         if ($newStreamFlag) {

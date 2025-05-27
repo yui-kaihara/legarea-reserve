@@ -52,7 +52,7 @@ if ($event->publicFlag) {
 }
 @endphp
                                 <input v-model="isCheck" type="checkbox" name="is_public" value="2" class="peer hidden is-submit"{{ $checked }} />
-                                <span class="block w-[2em] cursor-pointer bg-gray-500 rounded-full p-[1px] after:block after:h-[1em] after:w-[1em] after:rounded-full after:bg-white after:transition peer-checked:bg-blue-500 peer-checked:after:translate-x-[calc(100%-2px)]"></span>
+                                <span class="block w-[2em] mx-auto cursor-pointer bg-gray-500 rounded-full p-[1px] after:block after:h-[1em] after:w-[1em] after:rounded-full after:bg-white after:transition peer-checked:bg-blue-500 peer-checked:after:translate-x-[calc(100%-2px)]"></span>
                             </label>
                             <input type="hidden" name="times" value="{{ $event->times }}" />
                             <input type="hidden" name="date" value="{{ $event->date }}" />

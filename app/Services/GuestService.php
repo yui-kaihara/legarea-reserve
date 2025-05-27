@@ -13,11 +13,11 @@ class GuestService
     /**
      * コンストラクタ
      * 
-     * @param BlastmailService $blastmailService
+     * @param EmailApiIntegrationService $emailApiIntegrationService
      */
-    public function __construct(BlastmailService $blastmailService)
+    public function __construct(EmailApiIntegrationService $emailApiIntegrationService)
     {
-        $this->blastmailService = $blastmailService;
+        $this->emailApiIntegrationService = $emailApiIntegrationService;
     }
 
     /**
@@ -35,7 +35,7 @@ class GuestService
         if ($requests['stream_email']) {
             
             //ブラストメールへの反映をAPI経由で実行
-            $newStreamFlag = $this->blastmailService->reflect($requests);
+            $newStreamFlag = $this->emailApiIntegrationService->reflect($requests);
         }
         
         //新規配信フラグをリクエストに追加

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ContactFormRequest;
 use App\Models\Event;
-use App\Services\BlastmailService;
 use App\Services\ContactService;
 use App\Services\EventService;
 use App\Services\GuestService;
@@ -18,21 +17,18 @@ class GuestController extends Controller
     /**
      * コンストラクタ
      * 
-     * @param BlastmailService $blastmailService
      * @param ContactService $contactService
      * @param EventService $eventService
      * @param GuestService $guestService
      * @param SendMailService $sendMailService
      */
     public function __construct(
-        BlastmailService $blastmailService,
         ContactService $contactService,
         EventService $eventService,
         GuestService $guestService,
         SendMailService $sendMailService
     )
     {
-        $this->blastmailService = $blastmailService;
         $this->contactService = $contactService;
         $this->eventService = $eventService;
         $this->guestService = $guestService;
